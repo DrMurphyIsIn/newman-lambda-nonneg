@@ -1,0 +1,28 @@
+name: verify
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - name: Materialize Arda at the recorded tag and check the vendored copies
+        run: scripts/materialize.sh
+      - name: Install elan
+        run: |
+          curl -sSfL https://github.com/leanprover/elan/releases/latest/download/elan-x86_64-unknown-linux-gnu.tar.gz | tar xz
+          ./elan-init -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Build the dbn island and print the axioms of dbn_newman
+        working-directory: work/arda/telperion/examples/dbn/lean
+        run: |
+          lake exe cache get || true
+          lake build
+          lake env lean AxiomGuardDBN.lean | grep -E "dbn_newman|dbn_newman_of_neg" | tee axioms.txt
+          grep -q "'dbn_newman' depends on axioms: \[propext, Classical.choice, Quot.sound\]" axioms.txt
+      - name: Build the registry judge challenge (statement identity)
+        working-directory: work/arda/telperion/missions/judge/dbn
+        run: lake build MissionChallenges.RH_dbn_newman

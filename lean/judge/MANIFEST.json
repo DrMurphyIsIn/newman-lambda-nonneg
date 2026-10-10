@@ -1,0 +1,129 @@
+{
+  "island": "dbn",
+  "package": "DBN",
+  "toolchain": "leanprover/lean4:v4.34.0-rc1",
+  "comparator_tag": "v4.34.0-rc1",
+  "not_consumable": [],
+  "nodes": [
+    {
+      "slug": "RH_dbn_H0_eq_xi",
+      "campaign": "rh",
+      "theorem": "dbn_H0_eq_xi",
+      "solution_module": "DBNXi",
+      "challenge_module": "MissionChallenges.RH_dbn_H0_eq_xi",
+      "bridge_theorem": "MissionJudge.RH_dbn_H0_eq_xi",
+      "config": "RH_dbn_H0_eq_xi.comparator.json",
+      "nanoda": true,
+      "artifact_sha256": "482bd3d1f3c231d22170fc338a9035fea11765b2f33183384808e6badaf07cd2",
+      "statement_sha256": "2b0476d96dccfed7a081527904b3934edf92fff2d6f6f080feb7481a506ccdfa"
+    },
+    {
+      "slug": "RH_dbn_H0_zero_strip",
+      "campaign": "rh",
+      "theorem": "dbn_H0_zero_strip",
+      "solution_module": "DBNStrip",
+      "challenge_module": "MissionChallenges.RH_dbn_H0_zero_strip",
+      "bridge_theorem": "MissionJudge.RH_dbn_H0_zero_strip",
+      "config": "RH_dbn_H0_zero_strip.comparator.json",
+      "nanoda": true,
+      "artifact_sha256": "45d46b39f5db3fc38339e03301215509d059e78c6d1f5a7e9c1fc8da1e77098e",
+      "statement_sha256": "90e192d5ed99a4424d47e363c6ac25c798e3d5b2a45c18923d870efa1ef5bfd7"
+    },
+    {
+      "slug": "RH_dbn_debruijn_parametric",
+      "campaign": "rh",
+      "theorem": "dbn_debruijn_parametric",
+      "solution_module": "DBNM1Parametric",
+      "challenge_module": "MissionChallenges.RH_dbn_debruijn_parametric",
+      "bridge_theorem": "MissionJudge.RH_dbn_debruijn_parametric",
+      "config": "RH_dbn_debruijn_parametric.comparator.json",
+      "nanoda": true,
+      "artifact_sha256": "ab2642ddc8988aaadadf3ea91b84008ddc435f4479e7a1474c879defeb852d17",
+      "statement_sha256": "08169a2244ce23fc39bbdd0b70bda67499fc50e405325f84740d8f291b5f55a2"
+    },
+    {
+      "slug": "RH_dbn_debruijn_real_zeros",
+      "campaign": "rh",
+      "theorem": "dbn_debruijn_real_zeros",
+      "solution_module": "DBNHadamardApprox",
+      "challenge_module": "MissionChallenges.RH_dbn_debruijn_real_zeros",
+      "bridge_theorem": "MissionJudge.RH_dbn_debruijn_real_zeros",
+      "config": "RH_dbn_debruijn_real_zeros.comparator.json",
+      "nanoda": true,
+      "artifact_sha256": "65dbfcb59765532efa54f0acfce56f2b56f6d3dc2607adeb3aae9ed873c07147",
+      "statement_sha256": "a8b1e335472a84b4f8cbf8dc3df7b3db76d69212e77ef1f4f7b56118191f7ee2"
+    },
+    {
+      "slug": "RH_dbn_newman",
+      "campaign": "rh",
+      "theorem": "dbn_newman",
+      "solution_module": "DBNNewman",
+      "challenge_module": "MissionChallenges.RH_dbn_newman",
+      "bridge_theorem": "MissionJudge.RH_dbn_newman",
+      "config": "RH_dbn_newman.comparator.json",
+      "nanoda": true,
+      "artifact_sha256": "599c6e89ed3f1864fa44b4dd8e6c43656056b240f9524dbdf7d4ef8dfc3d9eb4",
+      "statement_sha256": "7e7eadd96e36441101642873dfaabccf62e8fcca8df98ce03ba2ef65d187b49e"
+    },
+    {
+      "slug": "RH_dbn_real_zeros_of_qrh",
+      "campaign": "rh",
+      "theorem": "dbn_real_zeros_of_qrh",
+      "solution_module": "DBNZeroFreeHalfplane",
+      "challenge_module": "MissionChallenges.RH_dbn_real_zeros_of_qrh",
+      "bridge_theorem": "MissionJudge.RH_dbn_real_zeros_of_qrh",
+      "config": "RH_dbn_real_zeros_of_qrh.comparator.json",
+      "nanoda": true,
+      "artifact_sha256": "a0670d8da5fc7e0f16be2de469674bb5ee9ae95af545c0b208e4fad973ff2f8a",
+      "statement_sha256": "3ac9c650e0b63ef2f4a980c9fcdc4b370aa3ca4e2af067edfdb8ed8170dc7026"
+    },
+    {
+      "slug": "RH_dbn_real_zeros_of_zeta_halfplane",
+      "campaign": "rh",
+      "theorem": "dbn_real_zeros_of_zeta_halfplane",
+      "solution_module": "DBNZeroFreeHalfplane",
+      "challenge_module": "MissionChallenges.RH_dbn_real_zeros_of_zeta_halfplane",
+      "bridge_theorem": "MissionJudge.RH_dbn_real_zeros_of_zeta_halfplane",
+      "config": "RH_dbn_real_zeros_of_zeta_halfplane.comparator.json",
+      "nanoda": true,
+      "artifact_sha256": "a0670d8da5fc7e0f16be2de469674bb5ee9ae95af545c0b208e4fad973ff2f8a",
+      "statement_sha256": "f4b99b7ad3ab58de22ce2ac791ddb2bd5573c9f10eeda53c9bd7ff2fa5ea3ff9"
+    },
+    {
+      "slug": "RH_dbn_real_zeros_upset",
+      "campaign": "rh",
+      "theorem": "dbn_real_zeros_upset",
+      "solution_module": "DBNM1Parametric",
+      "challenge_module": "MissionChallenges.RH_dbn_real_zeros_upset",
+      "bridge_theorem": "MissionJudge.RH_dbn_real_zeros_upset",
+      "config": "RH_dbn_real_zeros_upset.comparator.json",
+      "nanoda": true,
+      "artifact_sha256": "ab2642ddc8988aaadadf3ea91b84008ddc435f4479e7a1474c879defeb852d17",
+      "statement_sha256": "40f233cc0847b21c1ab4fd66d4ffbb9c06ba553552dc2e73df4a03b18731e49a"
+    },
+    {
+      "slug": "RH_dbn_rh_iff_H0_real_zeros",
+      "campaign": "rh",
+      "theorem": "dbn_rh_iff_H0_real_zeros",
+      "solution_module": "DBNRealZerosIffFinal",
+      "challenge_module": "MissionChallenges.RH_dbn_rh_iff_H0_real_zeros",
+      "bridge_theorem": "MissionJudge.RH_dbn_rh_iff_H0_real_zeros",
+      "config": "RH_dbn_rh_iff_H0_real_zeros.comparator.json",
+      "nanoda": true,
+      "artifact_sha256": "cc4483fde12753f20b2c121ea4f3a9272fdd36b2b5a2f75cf2b2ca71a1b52498",
+      "statement_sha256": "b53a176ee6cd16a1d34ad24439003569c150bba4500bc2f881692b24cbeb420f"
+    },
+    {
+      "slug": "RH_dbn_rh_iff_real_zeros_nonneg_t",
+      "campaign": "rh",
+      "theorem": "dbn_rh_iff_real_zeros_nonneg_t",
+      "solution_module": "DBNM1RHIff",
+      "challenge_module": "MissionChallenges.RH_dbn_rh_iff_real_zeros_nonneg_t",
+      "bridge_theorem": "MissionJudge.RH_dbn_rh_iff_real_zeros_nonneg_t",
+      "config": "RH_dbn_rh_iff_real_zeros_nonneg_t.comparator.json",
+      "nanoda": true,
+      "artifact_sha256": "f3154843d4185264ccbc0dc6fab73de687e2be517454031b7eecd11cd59b8454",
+      "statement_sha256": "f4ac36e5dc3b11aff23c3b8be7aab03e39f5a3a045b252592d46a10aa759be6f"
+    }
+  ]
+}

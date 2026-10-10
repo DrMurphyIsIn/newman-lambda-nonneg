@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below, and cite Rodgers-Tao for the theorem and Dobner for the proof it formalizes."
+title: "Newman's conjecture, kernel-checked: Lambda >= 0 for the de Bruijn-Newman constant in Lean 4 along Dobner's proof"
+authors:
+  - family-names: Murphy
+    given-names: Peter W.
+repository-code: "https://github.com/DrMurphyIsIn/newman-lambda-nonneg"
+license: Apache-2.0
+version: v1.0.0
+date-released: 2026-10-10
+doi: ZENODO_VERSION_DOI
+identifiers:
+  - type: doi
+    value: ZENODO_VERSION_DOI
+    description: "Zenodo archive of release v1.0.0"
+  - type: doi
+    value: ZENODO_CONCEPT_DOI
+    description: "Zenodo concept DOI (all versions; resolves to the latest)"
+keywords:
+  - de Bruijn-Newman constant
+  - Newman's conjecture
+  - Riemann xi function
+  - Stirling's formula
+  - almost periodicity
+  - Lean 4
+  - formal verification
+  - Comparator
+abstract: >-
+  Newman's conjecture that the de Bruijn-Newman constant is non-negative, proved by Rodgers and Tao in 2018,
+  is formalized in Lean 4 along Dobner's 2020 proof: for every t < 0 the heat-flowed Riemann xi function H_t
+  has a non-real zero. The proof term depends only on propext, Classical.choice and Quot.sound; it was read
+  back independently, granted through the Arda registry gate, and replayed by two kernels (Lean, nanoda) via
+  Comparator against a challenge whose type is the registered statement. New kernel-checked infrastructure:
+  complex Stirling with explicit remainder, the digamma asymptotic, Bohr almost periodicity for everywhere
+  convergent Dirichlet series, the Gaussian-convolution representation of H_t, and a saddle-point analysis.
+  Together with the registry's Lambda <= 9/32 the kernel-checked range is 0 <= Lambda <= 9/32; Lambda = 0 is
+  the Riemann Hypothesis and is not proved.

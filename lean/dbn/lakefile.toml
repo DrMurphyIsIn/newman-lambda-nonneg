@@ -1,0 +1,360 @@
+name = "DBN"
+# Route C (de Bruijn-Newman) foundations island -- RH_ROUTES_ROADMAP_2026-09-16.md section 4,
+# milestones C2 (DBNDefs) / C3 / C4. Same toolchain and Mathlib pin as li_positivity
+# (LiCriterion -> Mathlib de5ce8a9 / Lean v4.34.0-rc1) so `LiCriterion.riemannXi` is the shared
+# xi vocabulary across the two islands. AxiomGuardDBN is a defaultTarget so bare `lake build`
+# compiles the guard and, transitively, every module it imports (cf. the li_positivity lakefile
+# rationale, #448/#451).
+defaultTargets = ["DBNDefs", "DBNRealZerosIff", "DBNXiRiemann", "DBNGKernel", "DBNXiCos", "DBNXiIBP", "DBNXi", "DBNRealZerosIffFinal", "DBNStrip", "DBNStep", "DBNStepControls", "DBNHurwitz", "DBNHeatApprox", "DBNDeBruijnReduction", "DBNHadamardCount", "DBNHadamardProduct", "DBNHadamardMean", "DBNHadamardLinear", "DBNHadamard", "DBNHadamardApprox", "DBNM1Approx", "DBNM1Parametric", "DBNM1RHIff", "DBNM1Controls", "DBNM4P15Defs", "DBNM4LocalStep", "DBNM4HeatUniform", "DBNM4P15Criterion", "M6gapEMZeta", "M6gapEMZetaComplex", "M6gapEMZetaTail", "M6gapZetaEMSum", "M6gapHeightFloorCheck", "M6gapHeightFloorTrig", "M6gapHeightFloorEM", "M6gapHeightFloorBoxes", "M6gapZetaZeroConfinement", "M6gapDlvpZetaSymmetry", "M6gapHeightFloor", "M6gapImAxis", "M6gapP15ZeroFree", "DBNM5Alpha", "DBNM5Target", "DBNP15Wired", "DBNZeroFreeHalfplane", "DBNBohr", "DBNFtZero", "DBNFtZeroHigh", "DBNStirling", "DBNGaussConv", "DBNSaddleAlg", "DBNSaddleBounds", "DBNSaddleSum", "DBNTheorem4", "DBNNewman", "AxiomGuardDBN"]
+
+[[require]]
+name = "LiCriterion"
+git = "https://github.com/nicholasbulka/li-criterion-rh-equivalence-lean"
+rev = "35df682f3b709ffe5fbcfdd452dfa964bd622b87"
+
+[[lean_lib]]
+name = "DBNDefs"
+
+# Route C / C4 bridge (registry node RH.dbn_rh_iff_H0_real_zeros): RH in the AND-ladder strip
+# grammar <-> every zero of H_0 is real, proved CONDITIONALLY on the C2 representation theorem
+# H_0 = xi/8 (registry node RH.dbn_H0_eq_xi, not proved in this module -- it is DBNXi's
+# dbn_H0_eq_xi; carried here as the named Prop obligation DBN.H0EqXi). The C4 change of variables
+# and the xi-zeros-are-strip-zeros unpacking are unconditional. Nothing here proves RH.
+# conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNRealZerosIff"
+
+# Route C / C2 module A (design memo DESIGN_RH_dbn_H0_eq_xi_2026-09-22.md section 5, new work
+# N1, N2, N5): Riemann's symmetric integral completedRiemannZeta0 s = int_1^oo psi(x) (x^(s/2-1) +
+# x^((1-s)/2-1)) dx for EVERY s, via a general two-Ioi-1-integral formula for any weak FE-pair, plus
+# the psi / evenKernel 0 / thetaMoment 0 vocabulary bridges. Unconditional. It is one input to
+# RH.dbn_H0_eq_xi, which is NOT proved here and is not RH-equivalent. Nothing here proves RH.
+# conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNXiRiemann"
+
+# Route C / C2 module C (design memo DESIGN_RH_dbn_H0_eq_xi_2026-09-22.md section 5, row C):
+# the kernel g(u) = e^u psi(e^{4u}) of Riemann's symmetric integral, its closed-form derivatives
+# g', g'', the kernel identity g'' - g = 8 Phi, g'(0) = -1/2, decay bounds, and integrability /
+# boundary limits against exponentially bounded complex weights (the side conditions of the two
+# integrations by parts of module D).  Depends only on DBNDefs.  Not the representation theorem
+# H_0 = xi/8; nothing here proves RH.  conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNGKernel"
+
+# Route C / C2 module B (design memo section 5, row B): the change of variables x = e^{4u} in
+# Riemann's symmetric integral, completedRiemannZeta0 (1/2 + iz/2) = 8 int_0^oo g(u) cos(zu) du
+# for every complex z.  Imports modules A and C.  Not RH-equivalent; nothing here proves RH.
+# conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNXiCos"
+
+# Route C / C2 module D (design memo section 5, row D): two integrations by parts,
+# (z^2 + 1) int_0^oo g cos(z.) = -g'(0) - int_0^oo (g'' - g) cos(z.) = 1/2 - 8 H_0(z).  Imports
+# module C only.  Not RH-equivalent; nothing here proves RH.  conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNXiIBP"
+
+# Route C / C2 module E (design memo section 5, row E): the representation theorem
+# dbn_H0_eq_xi, H_0(z) = (1/8) xi(1/2 + iz/2) for every complex z (registry node RH.dbn_H0_eq_xi,
+# statement verbatim), plus H 0 I = 1/16.  An identity between two entire functions, NOT
+# RH-equivalent; it says nothing about where any zero lies.  Nothing here proves RH.
+# conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNXi"
+
+# Route C / C4, unconditional (registry node RH.dbn_rh_iff_H0_real_zeros, statement verbatim):
+# strip-RH <-> every zero of H_0 is real, as the one-line specialisation of DBNRealZerosIff's
+# conditional bridge at the C2 theorem dbn_H0_eq_xi.  An equivalence between two restatements of
+# the same OPEN conjecture; it proves neither side.  Nothing here proves RH.
+# conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNRealZerosIffFinal"
+
+# Route C / C3 input (registry node RH.dbn_H0_zero_strip): every zero of H_0 lies in the closed
+# strip |Im z| <= 1, proved C2-FREE from the absolutely convergent half-plane Re s > 1
+# (two-sided fold, termwise Gamma integral on the line, Tonelli/Fubini, Euler-product
+# nonvanishing of zeta; DESIGN_RH_dbn_debruijn_real_zeros_2026-09-22.md L1a-L1d).  Says nothing
+# about zeros inside the strip.  Nothing here proves RH.  conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNStrip"
+
+# Route C / C3 groundwork, obligation L4 of DESIGN_RH_dbn_debruijn_real_zeros_2026-09-22.md: the
+# discrete de Bruijn step (vertical-shift average T_delta contracts a horizontal zero strip by
+# delta^2 in Im^2) against an ABSTRACT even Hadamard product (EvenHadamardData). Pure Mathlib.
+# The Hadamard factorisation itself (L3) is NOT here. Nothing here proves RH.
+[[lean_lib]]
+name = "DBNStep"
+
+# Kernel-checked controls for DBNStep: POSITIVE (1 + z^2: hypotheses satisfiable, bound attained)
+# and NEGATIVE (z^2 - 2i: Hadamard data + strip but NOT real, conclusion fails -> the reality
+# hypothesis is load-bearing). Pure Mathlib. Nothing here proves RH.
+[[lean_lib]]
+name = "DBNStepControls"
+
+# Route C / C3 groundwork, obligation L2e: Hurwitz's theorem (zero-free limits of locally
+# uniformly convergent holomorphic functions), maximum-modulus proof. Pure Mathlib.
+[[lean_lib]]
+name = "DBNHurwitz"
+
+# Route C / C3 groundwork, obligations L2a-d: the de Bruijn approximants
+# G t N z = int_0^inf cosh(u sqrt(2t/N))^N Phi(u) cos(zu) du, the shift identity
+# G = T_delta^N (H 0), locally uniform convergence G t N -> H t, H t 0 > 0, and the Hurwitz
+# transfer to H t. Does NOT state or prove the registry node RH.dbn_debruijn_real_zeros.
+[[lean_lib]]
+name = "DBNHeatApprox"
+
+# Route C / C3 REDUCED to its two open inputs, carried as named Prop obligations (NOT proved):
+# H0ZeroFreeOffStrip (L1, contrapositive of registry lemma RH.dbn_H0_zero_strip) and
+# ApproxHadamard (L3, Hadamard data for every approximant). GIVEN both: zeros of G t N and of
+# H t lie in Im^2 <= max(1 - 2t, 0). CONDITIONAL; the registry node RH.dbn_debruijn_real_zeros is
+# NOT stated. Nothing here proves RH. conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNDeBruijnReduction"
+
+# Route C / C3 obligation L3 (Hadamard factorisation), Mathlib-only pieces
+# (telperion/docs/HADAMARD_PLAN_2026-09-23.md): L3a zero counting via Jensen's inequality and a
+# dyadic summation.  Nothing here proves RH.  conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNHadamardCount"
+
+# L3b: the even canonical product prod (1 - z^2 tau_k^2): entire, growth, zeros, orders.
+[[lean_lib]]
+name = "DBNHadamardProduct"
+
+# L3c/L3d: logarithm of a zero-free entire function; circle-average estimate for |Re H| via
+# Jensen's formula in the mean (replaces the classical minimum-modulus step).
+[[lean_lib]]
+name = "DBNHadamardMean"
+
+# L3e: Poisson + Borel-Caratheodory + Cauchy: H with sub-quadratic mean growth is affine.
+[[lean_lib]]
+name = "DBNHadamardLinear"
+
+# L3 assembled: evenHadamardData_of_order_lt_two -- every even entire function of order < 2
+# carries DBNStep.EvenHadamardData.  Classical, not RH.  conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNHadamard"
+
+# L3 for the approximants (approxHadamard : ApproxHadamard) and the assembly of de Bruijn's
+# theorem RH.dbn_debruijn_real_zeros (Lambda <= 1/2), statement verbatim.  Says nothing about
+# zeros inside the strip.  Nothing here proves RH.  conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNHadamardApprox"
+
+# Lane m1 (Route C milestone M1, ROUTE_C_SYNTHESIS_2026-09-23.md sections 5.2 / 7.2): the de Bruijn
+# approximants REWEIGHTED at an arbitrary real base time t0,
+# m1W t0 d N z = int_0^oo cosh(du)^N e^{t0 u^2} Phi(u) cos(zu) du: shift identity, entire / even /
+# real, order <= 3/2 for EVERY real t0 (negative included), even Hadamard data, locally uniform
+# convergence to H (t0 + s).  Nothing about zero locations.  Nothing here proves RH.
+# conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNM1Approx"
+
+# M1a/M1b: dbn_debruijn_parametric (de Bruijn 1950 Thm 13 / Polymath15 Thm 3.2, every real t0)
+# and dbn_real_zeros_upset.  CONDITIONAL on the caller's zero bound for H_{t0}; import closure has
+# no DBNStrip / DBNXi.  Says nothing about zeros of H_0 inside the strip; Lambda <= 0 is RH and is
+# not proved.  conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNM1Parametric"
+
+# M1c: dbn_rh_iff_real_zeros_nonneg_t, strip-RH <-> (for all t >= 0 every zero of H_t is real), from
+# C4 + M1b.  The sInf-free C10 wall as an EQUIVALENCE; proves neither side.  Nothing here proves RH.
+# conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNM1RHIff"
+
+# Kernel-checked positive controls for M1a: at (t0, Y) = (0, 1) the hypothesis is the strip node and
+# the parametric theorem reproduces C3 (t >= 1/2, Lambda <= 1/2) by a second route.  Not RH.
+# conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNM1Controls"
+
+# Lane m4 (Route C milestone M4, synthesis 7.2 `RH_dbn_p15_criterion`): the three hypotheses of
+# Polymath15 Prop 3.3 (arXiv:1904.12438v2 p.15) transcribed verbatim as named Props
+# P15ZeroFreeRect / P15Canopy / P15Barrier, and the parametric de Bruijn step (M1a) as the named
+# HYPOTHESIS M1aStep (not proved here; lane m1).  Definitions only.  conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNM4P15Defs"
+
+# Lane m4: the LOCAL discrete de Bruijn step (T_delta f(w) != 0 when every zero zeta of f has
+# (Im zeta)^2 < (Re w - Re zeta)^2 + (Im w)^2 + delta^2), the abstract discrete barrier induction,
+# and a compactness-margin lemma.  Mathlib + DBNStep only.  Nothing here proves RH.
+[[lean_lib]]
+name = "DBNM4LocalStep"
+
+# Lane m4: joint continuity of (t, z) -> H t z and the uniform approximation bound
+# |H(n d^2/2, z) - Gdelta d n z| <= (n d^4/4) C(T, R) along the discrete heat path.
+# Nothing here proves RH.  conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNM4HeatUniform"
+
+# Lane m4: Polymath15 Prop 3.3 (zero-free region criterion) PROVED from its hypotheses (i)-(iii)
+# by a discrete barrier argument on the de Bruijn approximants (no zero dynamics, no Rouche), and
+# the Thm 1.2 conclusion (t >= t0 + y0^2/2 -> real zeros) CONDITIONAL on the named hypothesis
+# M1aStep.  A criterion: verifies none of (i)-(iii), bounds no Lambda.  Nothing here proves RH.
+# conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNM4P15Criterion"
+
+# ---- lane m6gap (Route C M6 gaps, ROUTE_C_SYNTHESIS_2026-09-23 sections 5.2 / 7.2) ----
+# Cross-pin port of the AND_height_floor_kernel artifact (zeta_reflection/lean, Lean v4.32.0) onto
+# this island: the Euler-Maclaurin chain and the 32-box certificate, copied with NO proof edits
+# (module names prefixed M6gap, namespaces prefixed M6gap.).  Mathlib-only.  Finite low-height
+# verification (no zeta zero in the open critical strip with |Im| <= 55/16); nothing here proves
+# RH.  conjecture1_proved = False.
+[[lean_lib]]
+name = "M6gapEMZeta"
+
+[[lean_lib]]
+name = "M6gapEMZetaComplex"
+
+[[lean_lib]]
+name = "M6gapEMZetaTail"
+
+[[lean_lib]]
+name = "M6gapZetaEMSum"
+
+[[lean_lib]]
+name = "M6gapHeightFloorCheck"
+
+[[lean_lib]]
+name = "M6gapHeightFloorTrig"
+
+[[lean_lib]]
+name = "M6gapHeightFloorEM"
+
+[[lean_lib]]
+name = "M6gapHeightFloorBoxes"
+
+# Mathlib-only functional-equation bookkeeping (li_positivity copies, same pin): the four
+# Mathlib-only theorems of ZetaZeroConfinement and DlvpZetaSymmetry (reflections rho -> 1 - rho,
+# conj rho, 1 - conj rho).
+[[lean_lib]]
+name = "M6gapZetaZeroConfinement"
+
+[[lean_lib]]
+name = "M6gapDlvpZetaSymmetry"
+
+# The height floor on this island (AND_height_floor_kernel's statement, C2-free), extended to the
+# real segment (Im = 0) by the same certificate, and Polymath15 Thm 1.2(i) (zeta form) at X <= 55/8.
+[[lean_lib]]
+name = "M6gapHeightFloor"
+
+# H_t(iy) > 0 for real t, y (from Phi > 0, Polymath15 p.15) and, through C2 + the C4 unpacking,
+# zeta(sigma) != 0 for real 0 < sigma < 1.
+[[lean_lib]]
+name = "M6gapImAxis"
+
+# Polymath15 condition (i) in H_0 form (Prop 3.3(i)) at X <= 55/8, H_0 zero-free on |Re z| <= 55/8,
+# and the P15 p.16 bridge Thm 1.2(i) => Prop 3.3(i) for every X (C2 + C4 coordinate map).  Only the
+# first of P15's three inputs; no bound on Lambda.  conjecture1_proved = False.
+[[lean_lib]]
+name = "M6gapP15ZeroFree"
+
+# Route C milestone M5 (Polymath15 Thm 1.3, effective approximation of H_t), brick 1, Mathlib-only:
+# the Stirling-phase vocabulary alpha / log M_0 / log M_t (P15 (6)-(10)), (log M_0)' = alpha, the
+# alpha' bound (43), M_t = M_t^*, and the explicit parameter bounds (20) |gamma|, (21) Re s_*,
+# (22) |kappa| of Thm 1.3 (= P15 Prop 6.6 (i)-(iii)), plus the corrected (76) and a kernel negative
+# control showing P15's printed (76) is false at x = 200.  Elementary bounds on explicit functions;
+# NOT the analytic content of Thm 1.3.  Nothing here bears on RH.  conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNM5Alpha"
+
+# M5 target: P15 Thm 1.3 (13) as the named Prop `P15Thm13` and the unnormalized Cor 6.5 as
+# `P15Cor65` (NEITHER proved), their full vocabulary (f_t, e_A, e_B, e_{C,0}, B_t, N, A_{t,N},
+# B_{t,N}, E_A, E_B, E_{C,0}), the proved reduction Cor 6.5 => Thm 1.3 (division by B_t), and
+# P15 Cor 1.4 (non-vanishing criterion) CONDITIONAL on P15Thm13.
+# Nothing here bears on RH.  conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNM5Target"
+
+# Route C: the P15 criterion wired (M4 + M1 + M6gap): at X <= 55/8 only canopy (ii) and barrier (iii)
+# remain. Proves no Lambda bound by itself. conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNP15Wired"
+
+# Route C: zero-free half-plane for zeta => real zeros of H_t for t >= 2(theta - 1/2)^2; theta = 7/8
+# gives t >= 9/32 CONDITIONALLY on the 7/8 half-plane (OpenAI's QRH statement verbatim, carried as an
+# explicit hypothesis; discharged on the separate oai_qrh_bridge island, cross-pin).  A zero-free
+# half-plane is NOT RH.  Nothing here proves RH.  conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNZeroFreeHalfplane"
+
+# Newman / Lambda >= 0 programme (NEWMAN_LAMBDA_NONNEG_SCOPING_2026-10-10.md), step 1: Bohr almost
+# periodicity for everywhere absolutely convergent Dirichlet series, qualitative form (a strictly
+# increasing sequence of integer vertical shifts along which the series converges to itself locally
+# uniformly), via sequential compactness of the unit-twist vectors.  Pure Mathlib.  Nothing here
+# proves RH.  conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNBohr"
+
+# Newman step 2: F c s = sum exp(-c (log n)^2) n^(-s) (Dobner's F_t at c = |t|/4) converges
+# absolutely everywhere, is entire of finite order, and has a zero (Dobner Lemma 3, qualitative):
+# zero-free would make it exp(polynomial) by LiCriterion's Hadamard theorem, but F' = F g' is
+# O(2^(-sigma)) on the real axis while F' 0 = -sum log n a_n < 0.  Nothing here proves RH.
+# conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNFtZero"
+
+# Newman step 2b: F c has zeros at arbitrarily large height -- Bohr's shifts (DBNBohr) move the zero
+# of DBNFtZero up the strip; Hurwitz's zero-free form (DBNHurwitz) replaces Rouche.  Nothing here
+# proves RH.  conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNFtZeroHigh"
+
+# Newman step 3: Stirling's formula for the complex Gamma function with an explicit remainder,
+# Gamma z = exp((z - 1/2) Log z - z + (1/2) log 2pi + R z) with ||R z|| <= 1/(4||z||) on Re z > 0, and
+# the digamma asymptotic psi z = Log z - 1/(2z) + O(1/||z||^2).  Euler's limit formula (Mathlib
+# GammaSeq) + second-order Euler-Maclaurin on each unit cell + real Stirling.  Pure Mathlib,
+# reusable.  Nothing here proves RH.  conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNStirling"
+
+# Newman step 4: for c > 0, H_{-c}(z) = (4 pi c)^{-1/2} int e^{-w^2/4c} H_0(z + w) dw (Fubini with the
+# Gaussian Fourier transform), the Gaussian line may be moved vertically (Cauchy on rectangles, H_0
+# bounded on horizontal strips), and in s = 1/2 + iz/2: H_{-c}(-i(2s-1)) = sum_n B_n(s), B_n the
+# Gaussian-convolved n-th term gamma(v) n^{-v} on Re v = a > 1 (Dobner's (9)).  Uses DBNStrip's
+# termwise Gamma evaluation.  Nothing here proves RH.  conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNGaussConv"
+
+# Newman step 5a: the exact saddle-point bookkeeping of Dobner's Theorem 4 (gamma through Stirling's
+# L, the contour shift of B by Cauchy, B_n(J(s)) = gamma_t(s) a_n n^{-s} (1 + E_n(s)), and
+# xi_c(J(s)) = gamma_t(s)(F_{c/4}(s) + sum a_n n^{-s} E_n(s)) given convergence).  Algebra only; the
+# estimates on E_n are the next module.  Nothing here proves RH.  conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNSaddleAlg"
+
+# Newman step 5b: the pointwise estimates of Dobner's Theorem 4 -- near field ||K-1|| <= 8P/|b|
+# e^{2P/|b|} (branch-free logarithm split in the upper half-plane, Mathlib's Log(1+u) bounds,
+# DBNStirling's remainder), global ||K|| <= poly * exp(linear).  Nothing here proves RH.
+# conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNSaddleBounds"
+
+# Newman step 5c: the unified pointwise bound on K_n - 1, integrated against the Gaussian weight and
+# summed over n with the coefficients a_n = exp(-h_n^2/c): the error series is <= C_1/y + C_2 e^{-y^2/32c+pi y}
+# on the strip, uniformly.  Nothing here proves RH.  conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNSaddleSum"
+
+# Newman step 5: Dobner's Theorem 4, qualitative form -- xi_c(J(s))/gamma_t(s) - F_{c/4}(s) -> 0 as
+# Im s -> oo uniformly on |Re s - x_0| <= 1 (eq. (14) of arXiv:2005.05142).  Nothing here proves RH.
+# conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNTheorem4"
+
+# Newman step 6: NEWMAN'S CONJECTURE on this island (Rodgers-Tao 2018; proof after Dobner 2020):
+# dbn_newman : for every t < 0, H_t has a non-real zero -- Hurwitz on the Bohr-shifted discs around a
+# zero of F_{c/4}, Theorem 4 transferring the zeros to xi_c(J(.)), Re J -> oo moving them off the line.
+# Lambda >= 0 in the sInf-free vocabulary; with the registry's de Bruijn (Lambda <= 1/2) and the judged
+# QRH bridge (Lambda <= 9/32) the kernel-checked picture is 0 <= Lambda <= 9/32.  Lambda = 0 is RH and
+# is NOT proved.  conjecture1_proved = False.
+[[lean_lib]]
+name = "DBNNewman"
+
+# The CI axiom guard, declared as a lib so `lake build` compiles it (and thus all its imports).
+# It is still run separately via `lake env lean AxiomGuardDBN.lean` for the #print axioms check.
+[[lean_lib]]
+name = "AxiomGuardDBN"

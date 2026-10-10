@@ -1,0 +1,476 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{xcolor}
+\usepackage{listings}
+\setlength{\emergencystretch}{2.5em}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=black, citecolor=black, urlcolor=blue}
+\usepackage[capitalise,noabbrev]{cleveref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\lean}[1]{\texttt{#1}}
+\newcommand{\Lam}{\Lambda}
+\newcommand{\Hfun}{H}
+\newcommand{\re}{\operatorname{Re}}
+\newcommand{\im}{\operatorname{Im}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Log}{\operatorname{Log}}
+
+\definecolor{leanbg}{HTML}{F4F2EC}
+\lstdefinelanguage{Lean}{
+  morekeywords={theorem,lemma,def,noncomputable,import,namespace,end,open,by,fun,sorry,example},
+  sensitive=true, morecomment=[l]{--}, morecomment=[s]{/-}{-/}, morestring=[b]",
+}
+\lstset{language=Lean, basicstyle=\small\ttfamily, backgroundcolor=\color{leanbg},
+  frame=single, framerule=0pt, framesep=5pt, xleftmargin=5pt, xrightmargin=5pt,
+  breaklines=true, columns=fullflexible, keepspaces=true, showstringspaces=false,
+  literate={ℝ}{{$\mathbb{R}$}}1 {ℂ}{{$\mathbb{C}$}}1 {ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1
+           {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {→}{{$\to$}}1 {≠}{{$\neq$}}1 {≤}{{$\le$}}1 {≥}{{$\ge$}}1
+           {∧}{{$\wedge$}}1 {θ}{{$\theta$}}1 {Φ}{{$\Phi$}}1 {π}{{$\pi$}}1 {∑}{{$\sum$}}1 {∫}{{$\int$}}1
+           {↦}{{$\mapsto$}}1 {←}{{$\leftarrow$}}1 {∈}{{$\in$}}1 {ξ}{{$\xi$}}1 {·}{{$\cdot$}}1
+           {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {₀}{{$_0$}}1 {²}{{$^2$}}1 {ε}{{$\varepsilon$}}1
+           {σ}{{$\sigma$}}1 {τ}{{$\tau$}}1 {δ}{{$\delta$}}1 {γ}{{$\gamma$}}1 {ρ}{{$\rho$}}1
+           {‖}{{$\|$}}1 {ψ}{{$\psi$}}1 {𝓝}{{$\mathcal{N}$}}1}
+
+\title{Newman's conjecture, kernel-checked:\\ $\Lam \ge 0$ for the de Bruijn--Newman constant in Lean~4\\ along Dobner's proof}
+\author{Peter W. Murphy}
+\date{October 10, 2026\\[2pt] \small Repository \url{https://github.com/DrMurphyIsIn/newman-lambda-nonneg} \;$\cdot$\; DOI \url{https://doi.org/ZENODO_VERSION_DOI}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Newman's conjecture states that the de Bruijn--Newman constant $\Lam$ is non-negative; Rodgers and Tao proved it in 2018. We report a formalization in Lean~4, on the Arda project's \lean{dbn} island, of the theorem in the form Dobner gave it in 2020: for every real $t < 0$ the heat-flowed Riemann $\xi$ function $\Hfun_t$ has a zero off the real axis,
+\[
+\forall\, t < 0\ \ \exists\, z \in \C,\qquad \Hfun_t(z) = 0 \ \wedge\ \im z \ne 0 .
+\]
+The proof term depends only on \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}. Dobner's argument uses no information about the zeros of $\zeta$: it exhibits zeros of $\Hfun_t$ directly, by comparing $\xi_t$ at large height with an everywhere absolutely convergent Dirichlet series $F_t$ whose zeros are forced by Hadamard's factorization theorem and moved to every height by Bohr's almost periodicity. The formalization follows that route and departs from it in three places that make it shorter than the paper proof: Rouch\'e is replaced by the zero-free form of Hurwitz's theorem; the Dirichlet expansion of $\Hfun_t$ is obtained from the island's own $\Phi$ series rather than from $\xi = \gamma\zeta$ and a contour of $\xi$; and the saddle-point analysis of Dobner's Theorem~4 is carried out with a fixed base point and contours in $\re v \ge 2$, so that no pole of the Gamma factor is ever crossed and a single pointwise estimate covers every term. Along the way the island acquires kernel-checked infrastructure that Mathlib lacks: Stirling's formula for the complex Gamma function with an explicit remainder on the right half-plane, the digamma asymptotic, Bohr almost periodicity for everywhere convergent Dirichlet series, and the Gaussian-convolution representation of $\Hfun_t$. The registry node for the theorem was read back by an independent operator, granted through the registry's gate, and replayed by two kernels (Lean and nanoda) through openai/ten-proofs Comparator against a challenge whose type is the registered statement. Together with the registry's kernel-checked $\Lam \le 1/2$ (de Bruijn) and $\Lam \le 9/32$ (from OpenAI's quasi-Riemann hypothesis), the machine-checked range for the de Bruijn--Newman constant is now $0 \le \Lam \le 9/32$. The Riemann Hypothesis is $\Lam = 0$ and is not proved. The mathematics is Rodgers and Tao's theorem by Dobner's proof; the contribution is the formalization, and this paper is its record.
+\end{abstract}
+
+\section{Introduction}
+
+\subsection{The constant}
+
+Write $\xi$ for Riemann's entire function, $\xi(s) = \tfrac12 s(s-1)\pi^{-s/2}\Gamma(s/2)\zeta(s)$, whose zeros are exactly the nontrivial zeros of $\zeta$. Following Rodgers and Tao \cite{RT} and the Polymath15 project \cite{P15}, put
+\begin{equation}\label{eq:H}
+\Hfun_t(z) \;=\; \int_0^\infty e^{t u^2}\,\Phi(u)\cos(zu)\,du,
+\qquad
+\Phi(u) \;=\; \sum_{n \ge 1}\bigl(2\pi^2 n^4 e^{9u} - 3\pi n^2 e^{5u}\bigr)\exp\!\bigl(-\pi n^2 e^{4u}\bigr).
+\end{equation}
+Then $\Hfun_0(z) = \tfrac18\,\xi\!\left(\tfrac12 + \tfrac{iz}{2}\right)$, so the Riemann Hypothesis is the statement that every zero of $\Hfun_0$ is real. De Bruijn \cite{dB} proved that if every zero of $\Hfun_{t_0}$ is real then so is every zero of $\Hfun_t$ for $t \ge t_0$, and that this holds for $t_0 = 1/2$. Newman \cite{Ne} proved that for some $t$ the zeros of $\Hfun_t$ are not all real, so that
+\[
+\Lam \;=\; \inf\{\,t \in \R : \text{every zero of } \Hfun_t \text{ is real}\,\}
+\]
+is a well-defined real number, the de Bruijn--Newman constant, and he conjectured $\Lam \ge 0$: ``the Riemann Hypothesis, if true, is only barely so''. Lehmer pairs gave lower bounds converging on zero from below over three decades \cite{CNV,CSV,Od,SGD}, and Rodgers and Tao \cite{RT} proved $\Lam \ge 0$ in 2018. Their proof assumes $\Lam < 0$, so that RH holds and the zeros of $\Hfun_t$ are real and simple for $\Lam < t \le 0$; it follows the zeros along the heat flow through a system of ordinary differential equations, shows by an energy argument that they must sit in local equilibrium, and contradicts the pair-correlation estimates of Conrey, Ghosh, Goldston, Gonek and Heath-Brown. Upper bounds have moved more slowly: de Bruijn's $1/2$, made strict by Ki, Kim and Lee \cite{KKL}; $0.22$ by Polymath15 \cite{P15}; $0.2$ by Platt and Trudgian \cite{PT}; and, in October 2026, the first kernel-checked bound below $1/2$, $\Lam \le 9/32$, from OpenAI's zero-free half-plane $\re s > 7/8$ \cite{OAIqrh} composed with de Bruijn's theorem \cite{Murphy932}.
+
+In 2020 Dobner \cite{Do} gave a second proof of Newman's conjecture, for the extended Selberg class, which Rodgers and Tao describe as significantly simpler than their own and which uses no information about the zeros of $\zeta$. For every $t < 0$ it finds zeros of $\xi_t$ off the critical line directly: $\xi_t$ is a Gaussian convolution of $\xi$ along a vertical line; at large height and after a nonlinear shift $J_t$ it is approximated by a Gamma-type factor times an everywhere absolutely convergent Dirichlet series $F_t(s) = \sum_n e^{-(|t|/4)\log^2 n}\,n^{-s}$; $F_t$ has a zero by Hadamard's factorization theorem; Bohr's almost periodicity moves that zero to arbitrarily large height; and Rouch\'e transfers it to $\xi_t$, where the shift $J_t$ has pushed its real part away from $1/2$. This paper formalizes that proof.
+
+\subsection{The theorem}
+
+The Arda project's \lean{dbn} island \cite{Arda} is a Lean~4 development (toolchain \lean{v4.34.0-rc1}, Mathlib revision \lean{de5ce8a9}) carrying the family \eqref{eq:H} verbatim, de Bruijn's theorem, the Hadamard factorization of even entire functions of order below two, and Hurwitz's theorem. The island does not define $\Lam$ as an infimum; its registry states every bound on $\Lam$ in the equivalent sInf-free form, as a statement about the zeros of $\Hfun_t$ (\cref{rem:sinf}). In that vocabulary the result is:
+
+\begin{theorem}[\lean{dbn\_newman}]\label{thm:main}
+For every real $t < 0$ there is $z \in \C$ with $\Hfun_t(z) = 0$ and $\im z \ne 0$. Classically, $\Lam \ge 0$.
+\end{theorem}
+
+\begin{lstlisting}
+theorem dbn_newman :
+    ∀ t : ℝ, t < 0 → ∃ z : ℂ, DBN.H t z = 0 ∧ z.im ≠ 0
+\end{lstlisting}
+
+\noindent
+\lean{\#print axioms dbn\_newman} reports \lean{[propext, Classical.choice, Quot.sound]}. The island's axiom guard, which re-elaborates the whole development and prints the axioms of 687 theorems, reports the same three for every one of them.
+
+\subsection{What the contribution is, and what it is not}
+
+The theorem is Rodgers and Tao's. The proof is Dobner's. Neither is ours, and nothing here bears on the Riemann Hypothesis: $\Lam \ge 0$ was known, and $\Lam = 0$ remains open. What this paper records is (i) a kernel-checked proof of Newman's conjecture, about 3,900 lines of Lean in ten modules on top of the island's existing 8,600; (ii) the analytic infrastructure built for it, which Mathlib does not have and which is written to be upstreamed: Stirling's formula for the complex Gamma function with an explicit remainder on $\re z > 0$, the digamma asymptotic $\psi(z) = \Log z - 1/(2z) + O(\|z\|^{-2})$, Bohr almost periodicity for everywhere absolutely convergent Dirichlet series, the Gaussian-convolution representation of $\Hfun_t$ for $t<0$ and the Cauchy shift of its line, and a saddle-point analysis of a Gaussian-smoothed Gamma function; (iii) three departures from the paper proof that shortened the formalization from an estimate of 8--15 thousand lines to under four, recorded in \cref{sec:route} because they are mathematical and reusable; and (iv) a verification trail of the same kind as the one used for $\Lam \le 9/32$ \cite{Murphy932}: an independent read-back of the formal statement, a registry gate, and a replay by two kernels against a challenge whose type is the registered statement.
+
+With the registry's other two results the kernel-checked picture of the constant is
+\[
+0 \;\le\; \Lam \;\le\; \tfrac{9}{32},
+\]
+the lower half in the environment of this paper, the upper half in OpenAI's environment \cite{Murphy932}. This is a verification statement about two theorems that were already known; it does not shorten the distance to $\Lam = 0$.
+
+\section{The formal statements}\label{sec:statements}
+
+\subsection{The heat-flow family}
+
+The island defines $\Phi$ as a \lean{tsum} over the positive naturals and $\Hfun_t$ as a Lebesgue integral over $(0,\infty)$, exactly \eqref{eq:H}:
+
+\begin{lstlisting}
+noncomputable def Φ (u : ℝ) : ℝ :=
+  ∑' n : ℕ+, (2 * Real.pi ^ 2 * (n : ℝ) ^ 4 * Real.exp (9 * u)
+      - 3 * Real.pi * (n : ℝ) ^ 2 * Real.exp (5 * u))
+    * Real.exp (-Real.pi * (n : ℝ) ^ 2 * Real.exp (4 * u))
+
+noncomputable def HIntegrand (t : ℝ) (z : ℂ) (u : ℝ) : ℂ :=
+  ((Real.exp (t * u ^ 2) : ℝ) : ℂ) * ((Φ u : ℝ) : ℂ) * Complex.cos (z * u)
+
+noncomputable def H (t : ℝ) (z : ℂ) : ℂ := ∫ u in Set.Ioi (0 : ℝ), HIntegrand t z u
+\end{lstlisting}
+
+\noindent
+The island already has: $\Hfun_t$ is entire in $z$ for every real $t$; $\Hfun_t$ is even; $\Hfun_0(z) = \tfrac18\xi(\tfrac12 + \tfrac{iz}{2})$ (\lean{dbn\_H0\_eq\_xi}, with $\xi$ the \lean{riemannXi} of the pinned LiCriterion library); the two-sided fold $\Hfun_0(z) = \tfrac12\int_\R \Phi(u)e^{izu}\,du$; and, for $\im z < -1$, the termwise Gamma evaluation of the $\Phi$ series (\lean{DBNStrip}, proved in September 2026 for the zero strip of $\Hfun_0$),
+\begin{equation}\label{eq:termwise}
+\int_\R \bigl(2\pi^2 n^4 e^{9u} - 3\pi n^2 e^{5u}\bigr)e^{-\pi n^2 e^{4u}}\,e^{izu}\,du
+\;=\; \tfrac18\, s(s-1)\,\pi^{-s/2}\,\Gamma(s/2)\, n^{-s},\qquad s = \tfrac12 + \tfrac{iz}{2}.
+\end{equation}
+Equation \eqref{eq:termwise} is the reason the present formalization never needs $\zeta$ or $\xi$ (\cref{sec:gauss}).
+
+\subsection{The sInf-free convention}
+
+\begin{remark}\label{rem:sinf}
+The registry states ``$\Lam \le c$'' as ``for every $t \ge c$ every zero of $\Hfun_t$ is real'' and ``$\Lam \ge 0$'' as ``for every $t < 0$ some zero of $\Hfun_t$ is not real''. These are the classical statements once $\Lam$ exists and de Bruijn's monotonicity holds, both of which the island has (\lean{dbn\_real\_zeros\_upset}). Stating them without $\inf$ keeps each node a statement about the zeros of an explicit entire function, with no appeal to the completeness of $\R$ in the statement.
+\end{remark}
+
+\section{Dobner's proof, and the route that was formalized}\label{sec:route}
+
+Throughout, $t < 0$ and $c := -t > 0$. Dobner works with $\xi_t(s) := \Hfun_t$ in the variable $s = \tfrac12 + \tfrac{iz}{2}$; the island's \lean{H} is in the variable $z$, and we pass between them by $z = -i(2s-1)$, so that $\re s > \tfrac12 \Leftrightarrow \im z < 0$. His proof for $\zeta$ has six steps.
+
+\begin{enumerate}[label=(\arabic*),leftmargin=2em]
+\item \emph{Contour representation.} $\xi_t(s) = \dfrac{1}{i\sqrt{\pi c}}\displaystyle\int_{\re w = 2}\xi(w)\,e^{(s-w)^2/c}\,dw$, from the Fourier definition by Fubini and a contour shift into the half-plane of absolute convergence.
+\item \emph{Theorem 4.} With $F_t(s) = \sum_{n\ge1} e^{-(c/4)\log^2 n}\,n^{-s}$, $J_t(s) = s + \tfrac{c}{4}\Log\dfrac{s}{2\pi}$ and $\gamma_t(s) = \gamma(s)e^{(s - J_t(s))^2/c}$ for the Gamma factor $\gamma$ of $\xi = \gamma\zeta$: $\xi_t(J_t(s)) = \gamma_t(s)\bigl(F_t(s) + o(1)\bigr)$ as $\im s \to \infty$, uniformly on vertical strips. This is the bulk of his paper (his Lemmas 4--7), and he proves it with an explicit rate $O(y^{-1/5})$ in the region $|x| \le Cy^{1/4}$.
+\item \emph{Lemma 3.} $F_t$ has a zero: it is entire of finite order and bounded on right half-planes, so if it were zero-free Hadamard would make it $e^{P}$ with $\deg P \le 2$, and a Dirichlet series with two nonzero coefficients is not a single exponential.
+\item \emph{Theorem 5, Bohr.} $F_t$ is uniformly close to its vertical shifts $F_t(s + i\tau_m)$ on any strip, for a sequence $\tau_m \to \infty$; so $F_t$ has zeros near $s_0 + i\tau_m$.
+\item \emph{Transfer.} Rouch\'e on a small circle around $s_0 + i\tau_m$ gives a zero of $\xi_t \circ J_t$ nearby, i.e.\ a zero of $\xi_t$ at $J_t(s_0 + i\tau_m + o(1))$, whose real part $x_0 + \tfrac{c}{4}\log\tfrac{\tau_m}{2\pi} + o(1) \to \infty$ is eventually not $\tfrac12$.
+\item \emph{Conclusion.} $\xi_t$ has a zero off the critical line for every $t<0$, so $\Lam \ge 0$.
+\end{enumerate}
+
+The formalization keeps this architecture and changes three things.
+
+\paragraph{Hurwitz for Rouch\'e.} Mathlib has no Rouch\'e theorem, and the island has Hurwitz in the zero-free form (\lean{DBN.hurwitz\_ne\_zero}): if $F_i \to f$ locally uniformly on an open $U$, each $F_i$ is holomorphic and zero-free on $U$, and $f$ is entire and not identically zero, then $f$ has no zero in $U$. Both uses of Rouch\'e in steps (4) and (5) are contrapositives of this: if the shifted functions were eventually zero-free on the disc around $s_0$, the limit would not vanish at $s_0$. No new theorem was needed.
+
+\paragraph{The $\Phi$ series for $\xi = \gamma\zeta$.} Step (1) as written needs $\xi$, the Dirichlet series of $\zeta$ on $\re w = 2$, and a contour shift of $\xi$ from the critical line. The island's \lean{DBNStrip} already expands $\Hfun_0$ termwise by \eqref{eq:termwise} for $\im z < -1$. So instead we write $\Hfun_{-c}$ as a Gaussian convolution of $\Hfun_0$ along the real $\omega$-line (Fubini against the Fourier transform of the Gaussian), move that line by Cauchy to a height where $\im(z + \omega) < -1$ (this needs only that $\Hfun_0$ is entire and bounded on horizontal strips), and expand termwise there. The result is Dobner's (9) in the variable $s$, with the Gamma factor normalized as the island has it, $\gamma(v) = \tfrac1{16}v(v-1)\pi^{-v/2}\Gamma(v/2)$, and with no $\zeta$, no $\xi$ and no contour of $\xi$ anywhere.
+
+\paragraph{A fixed base point and no poles.} Dobner expands the integrand of the $n$-th term around its saddle, whose real part moves with $n$; his Lemma 7 is a crude bound on $|\gamma|$ for the large-$n$ terms, and the poles of $\gamma$ at $0, -2, -4, \dots$ are handled by a remark on their height. We instead fix a strip centre $x_0$ (the real part of the zero $s_0$ of $F_t$, which can be anywhere), put $M_0 := 3 - x_0$ and use the base point $b := s + M_0$, so that $2 \le \re b \le 4$ on the strip $|\re s - x_0| \le 1$; the contour for the $n$-th term is $\re v = \re b + h_n$ with $h_n = \tfrac{c}{2}\log n \ge 0$, hence always in $\re v \ge 2$, and Stirling's formula applies to every $\Gamma$ value that occurs. The Gaussian algebra absorbs the constant shift exactly (\cref{sec:saddle}): the main term is still $\gamma_t(s)e^{h_n\ell(s)}$, and the error picks up the fixed factor $e^{M_0^2/c}$. Only the digamma-level Stirling asymptotic enters, and one pointwise estimate covers every $n$ and every point of the contour, with the Gaussian factor $e^{((h+|\sigma|)^2 - y^2/4)/8c} \ge 1$ standing in for the indicator of the far region. There is no small/medium/large-$n$ case split, no rate, and no restriction $|x| \le Cy^{1/4}$; the qualitative form of Theorem 4 is all that step (5) uses, as Dobner notes.
+
+\section{The modules}\label{sec:modules}
+
+The ten modules, their main statements, and their line counts. Every theorem below is kernel-checked with axioms \lean{[propext, Classical.choice, Quot.sound]} and is printed by the island's axiom guard.
+
+\begin{table}[h]\centering\small
+\begin{tabular}{@{}llr@{}}
+\toprule
+Step & Module and main statement & Lines \\
+\midrule
+4 (Bohr) & \lean{DBNBohr.exists\_shifts\_tendstoLocallyUniformly} & 307 \\
+3 & \lean{DBNFtZero.exists\_zero}, \lean{hasFiniteOrder\_F} & 276 \\
+4 & \lean{DBNFtZero.exists\_zero\_im\_ge} (in \lean{DBNFtZeroHigh}) & 56 \\
+-- & \lean{DBNStirling.Gamma\_eq\_exp\_L}, \lean{norm\_R\_le}, \lean{digamma\_eq}, \lean{norm\_R'\_le} & 655 \\
+1 & \lean{DBNGaussConv.H\_neg\_eq\_gauss}, \lean{shift\_line}, \lean{H\_zero\_eq\_tsum}, \lean{xi\_eq\_tsum\_B} & 615 \\
+2 & \lean{DBNSaddleAlg.$\gamma$\_add\_eq}, \lean{B\_J\_eq}, \lean{B\_shift}, \lean{xi\_J\_eq} & 511 \\
+2 & \lean{DBNSaddleBounds.norm\_K\_sub\_one\_le}, \lean{norm\_K\_le} & 333 \\
+2 & \lean{DBNSaddleSum.norm\_E\_le}, \lean{error\_sum\_small} & 644 \\
+2 & \lean{DBNSaddle.theorem4} (in \lean{DBNTheorem4}) & 48 \\
+5, 6 & \lean{dbn\_newman} (in \lean{DBNNewman}) & 220 \\
+\bottomrule
+\end{tabular}
+\caption{The Newman modules on the dbn island. ``Step'' refers to the numbering of \cref{sec:route}.}
+\end{table}
+
+\subsection{Bohr almost periodicity}\label{sec:bohr}
+
+Mathlib's \lean{LSeries f s = $\sum$' n, term f s n} is the Dirichlet series $\sum_n f(n)n^{-s}$, and \lean{LSeriesSummable f s} is its absolute convergence at $s$.
+
+\begin{theorem}[\lean{DBNBohr.exists\_shifts\_tendstoLocallyUniformly}]
+Let $f : \N \to \C$ with \lean{LSeriesSummable f s} for every $s$. There is a strictly increasing $\tau : \N \to \N$ such that $s \mapsto \lean{LSeries f}(s + \tau_j\, i)$ converges to \lean{LSeries f} locally uniformly on $\C$ as $j \to \infty$.
+\end{theorem}
+
+\begin{lstlisting}
+theorem exists_shifts_tendstoLocallyUniformly (f : ℕ → ℂ)
+    (hf : ∀ s : ℂ, LSeriesSummable f s) :
+    ∃ τ : ℕ → ℕ, StrictMono τ ∧
+      TendstoLocallyUniformly (fun j s => LSeries f (s + (τ j : ℂ) * I)) (LSeries f) atTop
+\end{lstlisting}
+
+Dobner invokes Bohr's 1922 theorem \cite{Bo} with its density conditions on the shifts; step (5) needs only $\tau_m \to \infty$. The usual proof is simultaneous Diophantine approximation of $(\tau\log n/2\pi)_{n \le N}$ modulo one. The formalization uses sequential compactness instead: the vectors of unit twists $(n^{-ki})_{1 \le n \le N} \in \C^N$ lie in a compact set, so a subsequence converges, and the difference $k = \varphi(j_1) - \varphi(j_0)$ of two far-apart members is an integer as large as desired with $|n^{-ki} - 1| < \varepsilon$ for all $n \le N$ (\lean{exists\_twist\_close}). A tail estimate uniform on $\re s \ge -R$ (\lean{norm\_LSeries\_shift\_sub\_le}) and a diagonal choice of $(N, \varepsilon, k)$ along $R = j$ give the locally uniform convergence. No Diophantine approximation theorem is used.
+
+\subsection{The Gaussian Dirichlet series has a zero}\label{sec:ftzero}
+
+For $c' > 0$ let $a_n = e^{-c'\log^2 n}$ (\lean{gaussCoeff c'}) and $F_{c'}(s) = \lean{LSeries (gaussCoeff c') s}$; Dobner's $F_t$ is $F_{c/4}$.
+
+\begin{theorem}[\lean{DBNFtZero}]
+For $c' > 0$: $F_{c'}$ converges absolutely everywhere (\lean{lseriesSummable}), is entire of finite order with $\|F_{c'}(z)\| < \exp(\|z\|^3)$ for $\|z\|$ large (\lean{hasFiniteOrder\_F}, in the vocabulary of the pinned LiCriterion library), and has a zero (\lean{exists\_zero}). It has zeros of arbitrarily large imaginary part (\lean{exists\_zero\_im\_ge}).
+\end{theorem}
+
+The proof of \lean{exists\_zero} differs slightly from Dobner's Lemma 3. If $F$ were zero-free, LiCriterion's \lean{Hadamard.entire\_no\_zeros\_is\_exp\_polynomial} gives $F = e^{g}$ with $g$ a polynomial, hence $F' = F g'$. On the real axis $F(\sigma) \ge 1$ (positive terms, leading term $1$) while $F'(\sigma) = -\sum_n a_n \log n\, n^{-\sigma}$ is $O(2^{-\sigma})$ (Mathlib's \lean{LSeries\_hasDerivAt}), so the polynomial $g'$ tends to $0$ along the real axis; a polynomial of positive degree has norm tending to infinity (\lean{Polynomial.tendsto\_norm\_atTop}), so $g'$ is constant, and the constant is $0$; then $F' \equiv 0$, but $F'(0) = -\sum_n a_n\log n < 0$. No uniqueness theorem for Dirichlet coefficients is needed. \lean{exists\_zero\_im\_ge} is \cref{sec:bohr} plus Hurwitz: if $s \mapsto F(s + \tau_j i)$ were eventually zero-free on the unit disc around the zero $s_0$, their locally uniform limit $F$ would not vanish at $s_0$.
+
+\subsection{Complex Stirling with remainder}\label{sec:stirling}
+
+Mathlib has Bohr--Mollerup for the real Gamma function and Stirling's formula for $n!$, and defines \lean{Complex.digamma = logDeriv Gamma} with no asymptotic. The saddle-point analysis needs the first-order behaviour of $\log\Gamma$ and $\psi$ on the right half-plane with explicit error.
+
+\begin{theorem}[\lean{DBNStirling}]\label{thm:stirling}
+For $\re z > 0$,
+\[
+\Gamma(z) = \exp\bigl(L(z)\bigr),\qquad L(z) = (z - \tfrac12)\Log z - z + \tfrac12\log 2\pi + R(z),\qquad
+R(z) = \frac{1}{12 z} - \frac12\int_0^\infty \frac{\tilde B_2(x)}{(z+x)^2}\,dx,
+\]
+with $\tilde B_2(x) = \{x\}^2 - \{x\} + \tfrac16$, and $\|R(z)\| \le 1/(4\|z\|)$. $R$ is differentiable on $\re z > 0$ with $\|R'(z)\| \le 1/(2\|z\|^2)$, and $\psi(z) = \Log z - 1/(2z) + R'(z)$.
+\end{theorem}
+
+\begin{lstlisting}
+theorem Gamma_eq_exp_L {z : ℂ} (hz : 0 < z.re) : Gamma z = exp (L z)
+theorem norm_R_le {z : ℂ} (hz : 0 < z.re) : ‖R z‖ ≤ 1 / (4 * ‖z‖)
+theorem digamma_eq {z : ℂ} (hz : 0 < z.re) : digamma z = log z - 1 / (2 * z) + R' z
+theorem norm_R'_le {z : ℂ} (hz : 0 < z.re) : ‖R' z‖ ≤ 1 / (2 * ‖z‖ ^ 2)
+\end{lstlisting}
+
+The route is elementary and avoids every branch question: Euler's limit formula (Mathlib's \lean{GammaSeq\_tendsto\_Gamma}, $\Gamma(z) = \lim_n n^z n!/\prod_{k\le n}(z+k)$) is written as $\exp(L_n(z))$ with $L_n(z) = z\log n + \log n! - \sum_{k \le n}\Log(z+k)$, which is an identity of exponentials and needs no logarithm of a product. The sum $\sum_{k \le n}\Log(z+k)$ is evaluated by second-order Euler--Maclaurin on each unit cell $[m, m+1]$ from the explicit antiderivative
+\[
+\Phi_m(x) = \frac{B_2(x-m)}{z+x} - B_2'(x-m)\Log(z+x) + 2\bigl((z+x)\Log(z+x) - (z+x)\bigr),\qquad \Phi_m'(x) = -\frac{B_2(x-m)}{(z+x)^2},
+\]
+with $B_2(u) = u^2 - u + \tfrac16$; summing the cells telescopes to \lean{sum\_log\_eq}. Real Stirling (\lean{tendsto\_stirlingSeq\_sqrt\_pi}) handles $\log n!$, and $L_n(z) \to L(z)$ with the remainder integral absolutely convergent since $\|z + x\|^2 \ge \|z\|^2 + x^2$ on $\re z \ge 0$. The bound $\|R\| \le 1/(4\|z\|)$ follows from $\int_0^\infty dx/(\|z\|+x)^2 = 1/\|z\|$ and $(\|z\|+x)^2 \le 2\|z+x\|^2$. Differentiation under the integral (\lean{hasDerivAt\_integral\_of\_dominated\_loc\_of\_deriv\_le}) gives $R'$ with the kernel $\tilde B_2(x)/(z+x)^3$, and since $\Gamma = \exp\circ L$ on the open half-plane, $\psi = L'$. This is, to our knowledge, the first kernel-checked Stirling formula for the complex Gamma function; the island's sibling \lean{zeta\_reflection} had a digamma enclosure conditional on an unproved anchor.
+
+\subsection{The Gaussian convolution and Dobner's (9)}\label{sec:gauss}
+
+For $c > 0$ the Fourier transform of a Gaussian gives $e^{-cu^2} = (4\pi c)^{-1/2}\int_\R e^{-\omega^2/4c}e^{i\omega u}\,d\omega$ (Mathlib's \lean{fourierIntegral\_gaussian}), and Fubini against the two-sided fold of $\Hfun_{-c}$ yields:
+
+\begin{theorem}[\lean{DBNGaussConv.H\_neg\_eq\_gauss}, \lean{shift\_line}]
+For $c > 0$ and all $z \in \C$, $\beta \in \R$,
+\[
+\Hfun_{-c}(z) = \frac{1}{\sqrt{4\pi c}}\int_\R e^{-\omega^2/4c}\,\Hfun_0(z+\omega)\,d\omega
+= \frac{1}{\sqrt{4\pi c}}\int_\R e^{-(\omega + i\beta)^2/4c}\,\Hfun_0(z+\omega+i\beta)\,d\omega .
+\]
+\end{theorem}
+
+The second equality is Cauchy's theorem on the rectangle $[-T, T] \times [0, \beta]$ for the entire function $\omega \mapsto e^{-\omega^2/4c}\Hfun_0(z+\omega)$, with $T \to \infty$: the vertical sides are bounded by $e^{(\beta^2 - T^2)/4c}$ times a bound for $\Hfun_0$ on the horizontal strip $|\im| \le |\im z| + |\beta|$ (\lean{norm\_H\_zero\_le}, from $\|\Hfun_0(w)\| \le \tfrac12\int_\R |\Phi(u)|(e^{Bu} + e^{-Bu})\,du$ for $|\im w| \le B$). Taking $\beta = 2(\re s - a)$ places $\Hfun_0$ at points with $\im < -1$, where \eqref{eq:termwise} expands it, and the interchange of $\sum_n$ with $\int_\R$ is dominated by $\|\Gamma(v/2)\| \le \Gamma(\re v/2)$ (\lean{norm\_Gamma\_le\_Gamma\_re}, from the integral) times a Gaussian-polynomial majorant.
+
+\begin{theorem}[\lean{DBNGaussConv.xi\_eq\_tsum\_B}]\label{thm:eq9}
+Let $c > 0$, $a > 1$, $s \in \C$, and $\gamma(v) = \tfrac1{16}v(v-1)\pi^{-v/2}\Gamma(v/2)$. Then
+\[
+\Hfun_{-c}\bigl(-i(2s-1)\bigr) \;=\; \sum_{n \ge 1} B_n(s),\qquad
+B_n(s) = \frac{1}{\sqrt{\pi c}}\int_\R \gamma(a + i\tau)\, n^{-(a+i\tau)}\, e^{(a + i\tau - s)^2/c}\,d\tau .
+\]
+\end{theorem}
+
+\noindent
+This is Dobner's (9) with the contour on $\re v = a$ and $\xi_c(s) := \Hfun_{-c}(-i(2s-1))$, obtained without ever naming $\zeta$. \lean{DBNSaddleAlg.B\_shift} moves the contour: $B_n$ is the same for any two values $0 < a \le a'$, again by Cauchy on a rectangle, with $\pi^{-x/2}\Gamma(x/2)$ bounded on the compact interval $[a, a']$.
+
+\subsection{The saddle point: Dobner's Theorem 4}\label{sec:saddle}
+
+Fix $c > 0$, a strip centre $x_0$, $M_0 = 3 - x_0$, and for $s$ with $|\re s - x_0| \le 1$ write $b = s + M_0$ (so $2 \le \re b \le 4$), $y = \im s$,
+\[
+\ell(b) = \tfrac12\bigl(\Log\tfrac{b}{2} - \log\pi\bigr),\qquad
+J(s) = s + \tfrac{c}{2}\ell(b),\qquad
+h_n = \tfrac{c}{2}\log n,\qquad a_n = e^{-h_n^2/c},
+\]
+\[
+\gamma_t(s) = \gamma(b)\exp\bigl(-M_0\ell(b) + \tfrac{c}{4}\ell(b)^2\bigr).
+\]
+Note $a_n = e^{-(c/4)\log^2 n}$ is the coefficient of $F_{c/4}$, and $\ell(b) = \tfrac12\Log\tfrac{b}{2\pi}$ is the local slope of $\log\gamma$, so $J$ is Dobner's $J_t$ evaluated at the base point.
+
+\paragraph{Exact bookkeeping.} By \cref{thm:stirling}, $\gamma(v) = \tfrac1{16}v(v-1)\exp G_0(v)$ with $G_0(v) = -\tfrac{v}{2}\log\pi + L(v/2)$ on $\re v > 0$, and therefore, for $\re b, \re(b+\delta) > 0$ (\lean{$\gamma$\_add\_eq}),
+\[
+\gamma(b+\delta) = \gamma(b)\,\rho(\delta)\,\exp\bigl(Q(\delta) + \delta\,\ell(b)\bigr),\qquad
+\rho(\delta) = \frac{(b+\delta)(b+\delta-1)}{b(b-1)},
+\]
+\[
+Q(\delta) = L\!\left(\tfrac{b+\delta}{2}\right) - L\!\left(\tfrac{b}{2}\right) - \tfrac{\delta}{2}\Log\tfrac{b}{2}.
+\]
+Put the contour of the $n$-th term at $\re v = \re b + h_n$ and parametrize $v = b + \delta_n(\sigma)$, $\delta_n(\sigma) = h_n + i\sigma$. Completing the square in the Gaussian factor is then an exact identity (\lean{BIntegrand\_J\_eq}, \lean{B\_J\_eq}):
+
+\begin{theorem}[\lean{DBNSaddleAlg.B\_J\_eq}]
+With $K_n(\sigma) = \rho(\delta_n(\sigma))\exp Q(\delta_n(\sigma))$ and $\mathrm{gw}(\sigma) = e^{-\sigma^2/c + 2iM_0\sigma/c}$,
+\[
+B_n(J(s)) = \gamma_t(s)\, a_n n^{-s}\,\bigl(1 + E_n(s)\bigr),\qquad
+E_n(s) = \frac{e^{M_0^2/c}}{\sqrt{\pi c}}\int_\R \bigl(K_n(\sigma) - 1\bigr)\,\mathrm{gw}(\sigma)\,d\sigma,
+\]
+because $\frac{1}{\sqrt{\pi c}}\int_\R \mathrm{gw}(\sigma)\,d\sigma = e^{-M_0^2/c}$ (Mathlib's \lean{integral\_cexp\_quadratic}).
+\end{theorem}
+
+Summing over $n$ with \cref{thm:eq9} and \lean{B\_shift}, and with $\sum_n a_n n^{-s} = F_{c/4}(s)$ (\lean{tsum\_coef\_eq\_F}):
+\begin{equation}\label{eq:xiJ}
+\xi_c(J(s)) = \gamma_t(s)\Bigl(F_{c/4}(s) + \sum_{n\ge1} a_n n^{-s}E_n(s)\Bigr)
+\qquad(\lean{xi\_J\_eq}),
+\end{equation}
+provided the error series converges. Everything up to here is algebra; the analysis is in bounding $K_n - 1$.
+
+\paragraph{Near field.} For $\|\delta\| \le \|b\|/2$, $\re\delta \ge 0$, $\im b > 0$ and $\im(b+\delta) > 0$, the logarithm splits without a branch jump,
+\[
+\Log\tfrac{b+\delta}{2} = \Log\tfrac{b}{2} + \Log\bigl(1 + \tfrac{\delta}{b}\bigr)
+\qquad(\lean{log\_half\_add\_eq}),
+\]
+because both sides are logarithms of the same number and so differ by $2\pi i k$ (\lean{exp\_eq\_exp\_iff\_exists\_int}) with $2\pi|k| < \pi + \tfrac34 < 2\pi$ since $\pi > 3$. Then $Q(\delta) = \tfrac{b}{2}\bigl(\Log(1+u) - u\bigr) + \tfrac{\delta-1}{2}\Log(1+u) + R(\tfrac{b+\delta}{2}) - R(\tfrac{b}{2})$ with $u = \delta/b$, and Mathlib's bounds $\|\Log(1+u) - u\| \le \|u\|^2(1-\|u\|)^{-1}/2$ and $\|\Log(1+u)\| \le \tfrac32\|u\|$ together with $\|R\| \le 1/(4\|\cdot\|)$ give, for $\re b \ge 1$ and $\|b\| \ge 2$ (\lean{norm\_Q\_le\_near}, \lean{norm\_$\rho$\_sub\_one\_le}, \lean{norm\_K\_sub\_one\_le}),
+\[
+\|Q(\delta)\| \le \frac{2P(\delta)}{\|b\|},\qquad \|\rho(\delta) - 1\| \le \frac{6P(\delta)}{\|b\|},\qquad
+\|K - 1\| \le \frac{8P(\delta)}{\|b\|}\,e^{2P(\delta)/\|b\|},\qquad P(\delta) = \|\delta\|^2 + \|\delta\| + 1,
+\]
+using $\|e^{Q} - 1\| \le \|Q\|e^{\|Q\|}$, which is proved by the fundamental theorem of calculus along $t \mapsto e^{tQ}$ (\lean{norm\_exp\_sub\_one\_le\_mul\_exp}; Mathlib's bound needs $\|Q\| \le 1$).
+
+\paragraph{Global.} Without any size restriction on $\delta$, for $\re b \ge 1$, $\|b\| \ge 2$, $\re\delta \ge 0$ (\lean{re\_Q\_le}, \lean{norm\_$\rho$\_le}, \lean{norm\_K\_le}),
+\[
+\|K\| \le \frac{2(\|b\| + \|\delta\| + 1)^2}{\|b\|^2}\exp\Bigl(\frac{(\re b + \re\delta - 1)\|\delta\|}{2\|b\|} + \pi\bigl(|\im b| + |\im\delta|\bigr) + 1\Bigr),
+\]
+from $\re Q = \re\bigl[\tfrac{b+\delta-1}{2}\bigl(\Log\tfrac{b+\delta}{2} - \Log\tfrac{b}{2}\bigr)\bigr] - \tfrac{\re\delta}{2} + \re\Delta R$, $\log(\|b+\delta\|/\|b\|) \le \|\delta\|/\|b\|$, and $|\arg(\cdot) - \arg(\cdot)| \le 2\pi$. This is the only place the far field is estimated, and it needs no lower bound on $\|\gamma(b)\|$ because $K$ is defined through $L$ differences.
+
+\paragraph{One bound for every $\sigma$ and every $n$.} For $2 \le \re b \le 4$, $y = \im b \ge 2$, $h \ge 0$ (\lean{norm\_K\_sub\_one\_le\_unified}):
+\[
+\|K_n(\sigma) - 1\| \;\le\; N(y,h,\sigma) + e^{((h+|\sigma|)^2 - y^2/4)/8c}\bigl(1 + G(y,h,\sigma)\bigr),
+\]
+where $N$ is the near-field bound with $\|b\|$ replaced by $y$ and $P$ by $(h+|\sigma|)^2 + (h+|\sigma|) + 1$, and $G$ is the global bound with the same replacements. The proof is a case split on $h + |\sigma| \le y/2$: in the near region the first summand alone bounds $\|K-1\|$ (the hypotheses of the near-field lemma are met, $\|\delta\| \le h + |\sigma| \le y/2 \le \|b\|/2$ and $\im(b+\delta) = y + \sigma > 0$); in the far region $(h+|\sigma|)^2 > y^2/4$, so the exponential is at least $1$ and $\|K - 1\| \le 1 + \|K\| \le 1 + G$. The exponential thus plays the role of the indicator of the far region while remaining integrable against $e^{-\sigma^2/c}$.
+
+\paragraph{Integration and summation.} Both summands, multiplied by $\|\mathrm{gw}(\sigma)\| = e^{-\sigma^2/c}$, are dominated by Gaussian--polynomial--exponential majorants $A\,(1+|\sigma|)^2 e^{-\beta\sigma^2 + \alpha|\sigma|}$ (\lean{near\_majorant}, \lean{far\_majorant}), whose integrals are bounded by $e^{(\alpha+2)^2/2\beta}\sqrt{2\pi/\beta}$ after completing the square (\lean{integral\_gauss\_poly\_le}). For $y \ge \max(2, 8c)$ this gives (\lean{norm\_E\_le}, \lean{coef\_A$_1$\_le}, \lean{coef\_A$_2$\_le}, \lean{norm\_term\_le\_weights})
+\[
+a_n n^{-\re s}\,\|E_n(s)\| \;\le\; \frac{C_1 T_1(n)}{y} + C_2\,T_2(n)\,e^{-y^2/32c + \pi y},
+\]
+with $T_1(n) = (h_n^2 + h_n + 1)e^{-3h_n^2/8c}\,n^{1-x_0}$, $T_2(n) = (2+h_n)^2 e^{-59h_n^2/96c}\,n^{1-x_0}$, and $C_1, C_2$ depending on $c$ and $x_0$ only. The exponents $3/8$ and $59/96$ are what survives of $a_n = e^{-h_n^2/c}$ after the near-field factor $e^{2P/y} \le e^{h^2/2c + O(1)}$ and the far-field factors $e^{h^2/4c}$ (from $(h+|\sigma|)^2 \le 2h^2 + 2\sigma^2$), $e^{h^2/8c}$ (from $(3+h)h/2y$) and $e^{h^2/96c}$ (from the completed square); each $T_i$ is summable because $(1+h)^k e^{-\kappa h^2}n^{\beta}$ with $h = \tfrac{c}{2}\log n$ is a term of an everywhere convergent Gaussian Dirichlet series (\lean{summable\_weight}, from \cref{sec:ftzero}). Hence (\lean{error\_sum\_small}): for every $\varepsilon > 0$ there is $Y$ such that for all $s$ with $|\re s - x_0| \le 1$ and $\im s \ge Y$ the error series in \eqref{eq:xiJ} converges and has norm at most $\varepsilon$.
+
+\begin{theorem}[\lean{DBNSaddle.theorem4}; Dobner's Theorem 4, qualitative form]\label{thm:thm4}
+For $c > 0$, $x_0 \in \R$ and $\varepsilon > 0$ there is $Y$ such that for every $s$ with $|\re s - x_0| \le 1$ and $\im s \ge Y$,
+\[
+\Bigl\|\frac{\xi_c(J(s))}{\gamma_t(s)} - F_{c/4}(s)\Bigr\| \le \varepsilon .
+\]
+\end{theorem}
+
+\begin{lstlisting}
+theorem theorem4 {c : ℝ} (hc : 0 < c) (x₀ : ℝ) {ε : ℝ} (hε : 0 < ε) :
+    ∃ Y : ℝ, ∀ s : ℂ, |s.re - x₀| ≤ 1 → Y ≤ s.im →
+      ‖DBN.H (-c) (-I * (2 * J c (3 - x₀) s - 1)) / γt c (3 - x₀) s - DBNFtZero.F (c / 4) s‖ ≤ ε
+\end{lstlisting}
+
+\subsection{The transfer}\label{sec:transfer}
+
+Let $t < 0$, $c = -t$, $F = F_{c/4}$, and $s_0$ a zero of $F$ (\cref{sec:ftzero}); set $x_0 = \re s_0$, $M_0 = 3 - x_0$, $U$ the open unit disc around $s_0$, $h(w) = \xi_c(J(w))/\gamma_t(w)$. Along Bohr's shifts $\tau_j$ (\cref{sec:bohr}) the functions $s \mapsto F(s + i\tau_j)$ converge to $F$ locally uniformly on $U$; by \cref{thm:thm4}, applied with $\varepsilon/2$ and $Y$, and since $|\re(s + i\tau_j) - x_0| < 1$ and $\im(s + i\tau_j) \ge \im s_0 - 1 + \tau_j \ge Y$ for $j$ large, so do the functions $G_j(s) = h(s + i\tau_j)$ (\lean{hconvG}, by the metric characterization of locally uniform convergence and a triangle inequality). Each $G_j$ is holomorphic on $U$ once $\tau_j \ge |\im s_0| + 2$: $J$ and $\gamma_t$ are holomorphic and $\gamma_t \ne 0$ wherever $\im > 0$ and $\re(\cdot + M_0) > 0$, and $\Hfun_{-c}$ is entire. If all but finitely many $G_j$ were zero-free on $U$, Hurwitz would give $F(s_0) \ne 0$. So $\neg\,\forall^\infty j\ (\dots)$, i.e.\ frequently some $z \in U$ has $G_j(z) = 0$, and we may take such a $j$ with $\tau_j$ as large as we like (\lean{Filter.Frequently.and\_eventually}). Then with $w = z + i\tau_j$, $\xi_c(J(w)) = 0$ since $\gamma_t(w) \ne 0$, i.e.\ $\Hfun_t(Z) = 0$ for $Z = -i(2J(w) - 1)$, and
+\[
+\im Z = 1 - 2\re J(w) = 1 - 2\Bigl(\re w + \tfrac{c}{4}\log\frac{\|w + M_0\|}{2\pi}\Bigr)
+\qquad(\lean{im\_Z}, \lean{re\_J}),
+\]
+where $\re w > x_0 - 1$ and $\|w + M_0\| \ge \im w \ge \tau_j - |\im s_0| - 1$. Choosing $\tau_j \ge |\im s_0| + 2 + 2\pi\exp\bigl(4(2 + |x_0|)/c\bigr)$ makes $\re J(w) \ge x_0 - 1 + 2 + |x_0| \ge 1 > \tfrac12$, so $\im Z < 0$. This is \lean{dbn\_newman\_of\_neg}; \lean{dbn\_newman} is its restatement in the registered binder form.
+
+\section{Verification}\label{sec:verification}
+
+\subsection{The kernel and the axiom guard}
+
+Lean's kernel checked every declaration. The island's \lean{AxiomGuardDBN.lean} imports all 56 modules and prints the axioms of 687 named theorems, including all those of \cref{sec:modules}; every line reads \lean{[propext, Classical.choice, Quot.sound]}. The full island builds from a cold cache in 8,829 Lake jobs. The only non-Mathlib dependency is the pinned LiCriterion library \cite{LiCrit}, used for Hadamard's exp-polynomial theorem in \cref{sec:ftzero}; its statement is checked by the same kernel, under the same axioms.
+
+\subsection{The registry statement, the gate and the read-back}
+
+The Arda missions registry \cite{Arda} records theorems as nodes whose statements live in a separate Lean package (\lean{Statements.RH\_dbn\_newman}) and whose proofs are linked artifacts. Node \lean{RH\_dbn\_newman} was registered by the authoring session as a draft; the registered statement is the one displayed in \cref{thm:main}. The registry refuses to promote a draft on the strength of its author: an independent read-back of the formal statement, by a different identity and session, is required. The operator supplied one on 2026-10-10 (recorded in \lean{provenance/registry/RH\_dbn\_newman.toml}, \lean{independence = "independent"}). The gate (version 2026-09-23.1) then required the artifact to contain the registered statement verbatim, which is why \lean{dbn\_newman} exists alongside \lean{dbn\_newman\_of\_neg}; it rebuilt the island, checked the axiom closure of the artifact (\lean{closure\_clean = true}), hashed the artifact and the statement, and flipped the node to \lean{proved}.
+
+\subsection{The second kernel}
+
+The registry's judge generates, for every proved node, a Comparator challenge module whose \emph{type} is the registered statement and whose \emph{proof} is the artifact's constant:
+
+\begin{lstlisting}
+theorem MissionJudge.RH_dbn_newman :
+    ∀ t : ℝ, t < 0 → ∃ z : ℂ, DBN.H t z = 0 ∧ z.im ≠ 0 :=
+  dbn_newman
+\end{lstlisting}
+
+\noindent
+The module imports the artifact and the whole island through its axiom guard, so a vocabulary constant shadowed by the artifact would be a duplicate declaration rather than a silent substitution; it elaborates only if the artifact proves exactly the registered proposition. The \lean{missions-comparator} CI job then runs openai/ten-proofs Comparator \cite{Comparator} on it: export through \lean{lean4export} \cite{l4x}, the axiom whitelist $\{$\lean{propext}, \lean{Quot.sound}, \lean{Classical.choice}$\}$, replay through Lean's kernel, and replay through nanoda \cite{nanoda} as a second, independently written kernel. The job passed on the pull-request head (run 38062595826, job 114244014550) and again on the merge commit on \lean{main} (run 38070548082, job 114267349679); the verdict lines are in \cref{app:logs} and the full transcripts in \lean{logs/}. The record was written to the node by \lean{mission comparator-record}, which fetched the job log, checked the PASS line for this node and theorem, and matched the judged commit against the artifact hash of the grant (\lean{head\_check = "matched"}, \lean{log\_check = "verified"}, \lean{kernel\_mode = "nanoda"}).
+
+\subsection{What is checked and what is trusted}
+
+Kernel-checked: every theorem named in this paper, the registered statement's identity with the artifact's type, and the axiom whitelist. Checked by a second implementation: the same, by nanoda. Trusted as code: Lean~4 \lean{v4.34.0-rc1} itself, Mathlib \lean{de5ce8a9} and LiCriterion \lean{35df682f} as the source of the definitions used (in particular Mathlib's \lean{Complex.Gamma}, \lean{LSeries} and the Bochner integral), and the island's definition of $\Phi$ and $\Hfun_t$ as the faithful transcription of \eqref{eq:H}. The operator's read-back is the human check that the registered statement says what this paper says it says. Not checked by anything here: that $\Hfun_0 = \xi/8$ connects \cref{thm:main} to the Riemann zeta function; the island proves that identity separately (\lean{dbn\_H0\_eq\_xi}) and this paper does not depend on it.
+
+\section{What this does and does not advance}\label{sec:frontier}
+
+Newman's conjecture was a theorem before this work \cite{RT,Do}. The constant's position in $[0, 1/2]$ was known, and the kernel-checked bound $\Lam \le 9/32$ \cite{Murphy932} did not change it. This paper completes the kernel-checked picture of the de Bruijn--Newman constant from below, so that both halves of $0 \le \Lam \le 9/32$ now rest on the same kind of evidence: a proof term under three standard axioms, a registered statement read back by a person, and a replay by two kernels. The two halves live in two Lean environments (this one at Mathlib \lean{de5ce8a9}, the upper bound at OpenAI's \lean{d13f23b}); porting the present development to OpenAI's pin, as was done for de Bruijn's theorem, would put the whole range in one environment and is routine.
+
+The Riemann Hypothesis is $\Lam = 0$. Nothing in this paper moves toward it. The upper bound can only come down either from a better zero-free half-plane for $\zeta$ (the only known source of a fixed strip is OpenAI's $7/8$, and the method's exponent system appears to be tight there) or from the Polymath15 route, which approaches $0$ only as the height to which the zeros are verified grows without bound. We note two things this formalization does enable. First, Dobner's theorem is stated for the extended Selberg class, and every piece of the present proof except the Dirichlet-series layer and the product of Gamma factors is already general; the class version is the natural next campaign. Second, the remainder bounds of \cref{sec:saddle} are explicit, so Theorem 4 can be made quantitative, giving explicit statements about how far off the real axis the zeros of $\Hfun_t$ lie as $t \to 0^-$; Rodgers and Tao's dynamics say those zeros reach the axis exactly at $t = 0$ if RH holds. An effective picture of that approach is new terrain, with no promise attached.
+
+\section*{Acknowledgements}
+
+The theorem is Rodgers and Tao's and the proof is Dobner's; this paper formalizes the latter and claims nothing beyond the formalization. The dbn island's heat-flow family, de Bruijn's theorem, the Hadamard machinery and Hurwitz's theorem were formalized by the Arda project in September 2026; the termwise Gamma evaluation of \lean{DBNStrip} is what made the Gaussian-convolution route possible. Hadamard's exp-polynomial theorem is from Nicholas Bulka's LiCriterion library. The second kernel is Chris Kernan's nanoda, driven by the Lean FRO and OpenAI's Comparator. The formalization, the registry tooling and this paper were produced with extensive use of an AI coding assistant (Claude, Anthropic) under the direction of the author; the Lean kernel is the sole trusted component, and every claim here is either a kernel-checked theorem or labelled otherwise. The operator's independent read-back of the formal statement was written by the author.
+
+\begin{thebibliography}{99}\small
+
+\bibitem{dB} N.~G. de Bruijn, The roots of trigonometric integrals, \emph{Duke Math.\ J.} 17 (1950), 197--226.
+
+\bibitem{Ne} C.~M. Newman, Fourier transforms with only real zeros, \emph{Proc.\ Amer.\ Math.\ Soc.} 61 (1976), 245--251.
+
+\bibitem{CNV} G.~Csordas, T.~S. Norfolk and R.~S. Varga, A lower bound for the de Bruijn--Newman constant $\Lambda$, \emph{Numer.\ Math.} 52 (1988), 483--497.
+
+\bibitem{CSV} G.~Csordas, W.~Smith and R.~S. Varga, Lehmer pairs of zeros, the de Bruijn--Newman constant $\Lambda$, and the Riemann Hypothesis, \emph{Constr.\ Approx.} 10 (1994), 107--129.
+
+\bibitem{Od} A.~M. Odlyzko, An improved bound for the de Bruijn--Newman constant, \emph{Numer.\ Algorithms} 25 (2000), 293--303.
+
+\bibitem{SGD} Y.~Saouter, X.~Gourdon and P.~Demichel, An improved lower bound for the de Bruijn--Newman constant, \emph{Math.\ Comp.} 80 (2011), 2281--2287.
+
+\bibitem{KKL} H.~Ki, Y.-O. Kim and J.~Lee, On the de Bruijn--Newman constant, \emph{Adv.\ Math.} 222 (2009), 281--306.
+
+\bibitem{RT} B.~Rodgers and T.~Tao, The de Bruijn--Newman constant is non-negative, \emph{Forum Math.\ Pi} 8 (2020), e6; arXiv:1801.05914.
+
+\bibitem{Do} A.~Dobner, A proof of Newman's conjecture for the extended Selberg class, arXiv:2005.05142 (v2, January 2026).
+
+\bibitem{Bo} H.~Bohr, \"Uber eine quasi-periodische Eigenschaft Dirichletscher Reihen mit Anwendung auf die Dirichletschen $L$-Funktionen, \emph{Math.\ Ann.} 85 (1922), 115--122.
+
+\bibitem{P15} D.~H.~J. Polymath, Effective approximation of heat flow evolution of the Riemann $\xi$ function, and a new upper bound for the de Bruijn--Newman constant, \emph{Res.\ Math.\ Sci.} 6 (2019), 31; arXiv:1904.12438.
+
+\bibitem{PT} D.~Platt and T.~Trudgian, The Riemann hypothesis is true up to $3 \cdot 10^{12}$, \emph{Bull.\ London Math.\ Soc.} 53 (2021), 792--797; arXiv:2004.09765.
+
+\bibitem{OAIqrh} OpenAI, The Quasi-Riemann Hypothesis, OpenAI Math Release preprint \texttt{OAI:The-Quasi-Riemann-Hypothesis-October-5-2026} (2026). \url{https://github.com/openai/math/tree/main/preprints}.
+
+\bibitem{Murphy932} P.~W. Murphy, A kernel-checked bound $\Lambda \le 9/32$ for the de Bruijn--Newman constant from OpenAI's quasi-Riemann hypothesis, 2026, \url{https://github.com/DrMurphyIsIn/qrh-debruijn-newman}, doi:10.5281/zenodo.23269134.
+
+\bibitem{Arda} P.~W. Murphy, Arda: the Telperion engine and the missions registry, \url{https://github.com/DrMurphyIsIn/Arda}, tag \texttt{newman-v1.0.0} (commit \texttt{ddf2ecff0}). The \texttt{dbn} island is \texttt{telperion/examples/dbn/lean}; the registry node is \texttt{RH\_dbn\_newman} in \texttt{telperion/missions/rh}; the design notes are \texttt{telperion/docs/NEWMAN\_LAMBDA\_NONNEG\_SCOPING\_2026-10-10.md} and \texttt{RH\_PROGRAM\_2026-10-10.md}.
+
+\bibitem{Repo} P.~W. Murphy, \texttt{newman-lambda-nonneg}: Lean sources, verification records and this paper, \url{https://github.com/DrMurphyIsIn/newman-lambda-nonneg}, v1.0.0 (2026), archived at Zenodo, \url{https://doi.org/ZENODO_VERSION_DOI} (this version) and \url{https://doi.org/ZENODO_CONCEPT_DOI} (all versions).
+
+\bibitem{LiCrit} N.~Bulka, \texttt{li-criterion-rh-equivalence-lean}, commit \texttt{35df682f}, Apache License 2.0. \url{https://github.com/nicholasbulka/li-criterion-rh-equivalence-lean}.
+
+\bibitem{Comparator} Lean FRO and OpenAI, \texttt{comparator}: a checker for formal challenges (openai/ten-proofs Comparator), tag v4.34.0. \url{https://github.com/leanprover/comparator}.
+
+\bibitem{nanoda} C.~Kernan (ammkrn), \texttt{nanoda\_lib}: a type checker for Lean~4 export files, in Rust. \url{https://github.com/ammkrn/nanoda_lib}.
+
+\bibitem{l4x} \texttt{lean4export}: an exporter for Lean~4 environments. \url{https://github.com/leanprover/lean4export}.
+
+\bibitem{Lean} L.~de Moura and S.~Ullrich, The Lean 4 theorem prover and programming language, in \emph{Automated Deduction -- CADE 28}, LNCS 12699, Springer (2021), 625--635.
+
+\bibitem{Mathlib} The mathlib Community, The Lean mathematical library, in \emph{CPP 2020}, ACM (2020), 367--381. Revision \texttt{de5ce8a9a66a4aa68a9bdbb35b63a06d34d9ca11} (2026).
+
+\end{thebibliography}
+
+\appendix
+
+\section{Reproduction}\label{app:repro}
+
+\lean{scripts/materialize.sh} clones the Arda repository at tag \lean{newman-v1.0.0} into \lean{work/arda}, checks that every Lean file vendored in \lean{lean/dbn/} and the judge challenge in \lean{lean/judge/} are byte-identical to the checkout, and prints the next commands:
+
+\begin{lstlisting}[language=bash]
+cd work/arda/telperion/examples/dbn/lean
+lake exe cache get && lake build              # 56 modules; AxiomGuardDBN is a default target
+lake env lean AxiomGuardDBN.lean | grep dbn_newman
+#  'dbn_newman' depends on axioms: [propext, Classical.choice, Quot.sound]
+cd ../../../missions/judge/dbn && lake build MissionChallenges.RH_dbn_newman
+\end{lstlisting}
+
+\noindent
+The last command fails to elaborate unless the artifact's type is exactly the registered statement. For the second kernel, build \lean{leanprover/comparator} at tag v4.34.0 with its \lean{lean-toolchain} set to \lean{v4.34.0-rc1} and nanoda, and run \lean{lake env comparator RH\_dbn\_newman.comparator.json} in the same directory; it must accept, as the CI job did. The repository's own \lean{verify.yml} workflow performs the materialization, the island build, the axiom check and the challenge build on every push.
+
+\section{The verdicts, verbatim}\label{app:logs}
+
+From \lean{logs/ci\_judge\_dbn\_pr\_run\_38062595826\_job\_114244014550.txt} (pull-request head \lean{8592b5726}):
+
+\begin{lstlisting}[language=bash]
+COMPARATOR PASS island=dbn node=RH_dbn_newman theorem=dbn_newman run=38062595826 kernel=nanoda
+\end{lstlisting}
+
+\noindent
+From \lean{logs/ci\_judge\_dbn\_main\_run\_38070548082\_job\_114267349679.txt} (merge commit \lean{ddf2ecff0} on \lean{main}):
+
+\begin{lstlisting}[language=bash]
+COMPARATOR PASS island=dbn node=RH_dbn_newman theorem=dbn_newman run=38070548082 kernel=nanoda
+\end{lstlisting}
+
+\noindent
+The node record (\lean{provenance/registry/RH\_dbn\_newman.toml}) carries the author block, the operator's read-back, the grant (artifact digest \lean{599c6e89…}, statement digest \lean{7e7eadd9…}, gate 2026-09-23.1) and the Comparator record (run 38062595826, job 114244014550, judged head \lean{8592b5726}, \lean{kernel\_mode = "nanoda"}, \lean{log\_check = "verified"}, \lean{head\_check = "matched"}).
+
+\end{document}

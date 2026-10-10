@@ -1,0 +1,40 @@
+created = "2026-09-17"
+depends_on = ["RH_dbn_H0_zero_strip"]
+kind = "milestone"
+name = "RH.dbn_debruijn_real_zeros"
+statement_module = "Statements.RH_dbn_debruijn_real_zeros"
+status = "proved"
+title = "Route C / C3, de Bruijn 1950: for every t >= 1/2 every zero of H_t is real (Lambda <= 1/2). PROVED on the dbn island (DBNHadamardApprox: Hadamard factorisation of order < 2 proved (L3, PR #608) + heat-flow approximants + Hurwitz + the C2-free zero strip). The known half of de Bruijn-Newman, NOT RH (RH is Lambda <= 0)"
+updated = "2026-09-30"
+
+[comparator]
+artifact_sha256 = "65dbfcb59765532efa54f0acfce56f2b56f6d3dc2607adeb3aae9ed873c07147"
+date = "2026-09-30"
+head_check = "matched"
+job_id = "109867795198"
+job_url = "https://github.com/DrMurphyIsIn/Arda/actions/runs/36707277853/job/109867795198"
+judged_head_sha = "acfb0ee57108a185c484409cd91ac5621ce2d13e"
+kernel_mode = "nanoda"
+log_check = "verified"
+run_id = "36707277853"
+theorem = "dbn_debruijn_real_zeros"
+
+[grant]
+artifact_sha256 = "65dbfcb59765532efa54f0acfce56f2b56f6d3dc2607adeb3aae9ed873c07147"
+date = "2026-09-24"
+gate_version = "2026-09-23.1"
+identity = "dr.murphy.is.in@arda-dao.com"
+session = "ef083c48-579d-4bec-a689-c30fdccec2a1"
+statement_sha256 = "a8b1e335472a84b4f8cbf8dc3df7b3db76d69212e77ef1f4f7b56118191f7ee2"
+
+[proof]
+artifact = "../../examples/dbn/lean/DBNHadamardApprox.lean"
+artifact_kind = "lean_module"
+closure_clean = true
+via = "direct"
+
+[readback]
+auditor = "blind-auditors A1+A2 (same-session subagents of the author, self-attested, 2026-09-23)"
+date = "2026-09-23"
+independence = "unverified"
+text = "Read-back (written before reading the artifact): for every real t with t >= 1/2, every complex z with DBN.H t z = 0 has Im z = 0. DBN.H t z is the integral over u in (0, oo) of e^{t u^2} Phi(u) cos(zu), where Phi(u) is the Polymath15 kernel sum over n >= 1 of (2 pi^2 n^4 e^{9u} - 3 pi n^2 e^{5u}) exp(-pi n^2 e^{4u}). This is de Bruijn 1950 (Lambda <= 1/2). It is weaker than RH, which is equivalent to Lambda <= 0.\n\nStatement gate: the canonical-path statement_matches returned True. My own whitespace-stripped comparison also matches. artifact_incompleteness_markers returned [] on all 21 island modules. An independent grep found no axiom, opaque, extern, native_decide, `sorry` or admit. The RHDefs DBN block is line-for-line identical to DBNDefs lines 40-41, 211-214, 408-409 and 413.\n\nBuild and axioms: lake build --no-build reports \"All targets up-to-date (8759 jobs)\". My own #print axioms probe of dbn_debruijn_real_zeros gave [propext, Classical.choice, Quot.sound]. The probe is deleted.\n\nSemantics: the theorem type has no hypotheses. Both obligations in its closure are discharged as theorems, and neither is RH:\n- H0ZeroFreeOffStrip covers only the |Im| > 1 strip. It is proved as H0_zero_strip.\n- The Hadamard factorisation is proved as approxHadamard, via evenHadamardData_of_order_lt_two with growth order 3/2 < 2. EvenHadamardData carries a real tendsto_prod field, and no Hadamard hypothesis appears anywhere in the closure.\n\nThe statement is not vacuous: an H that was identically 0 or undefined would make it false.\n\nNumerics (mpmath, dps 40):\n- H_0 matches xi(1/2 + iz/2)/8 to 12 digits at 4 points.\n- For H_{1/2}, the argument-principle winding is 0 on both boxes Re [0,60] x Im [0.1,1] and Im [-1,-0.1], and the minimum |H| on the boundary is 8.7e-10.\n- Planting a zero at 30+0.5i as a positive control gives winding 1.\n- A thin box around the real axis gives winding 3 for both t = 0 and t = 1/2. The real zeros of H_{1/2} are 27.98, 41.67 and 49.73.\n- The zeros of H_0 equal 2*gamma_k for k = 1..3 to 1e-36.\n\nEstablishes: an unconditional, kernel-checked, axioms-clean proof of de Bruijn's theorem for the island's DBN.H, with the statement byte-identical to the registry. Does not establish anything about the zeros of H_0 inside the strip, Lambda <= 0, or RH. conjecture1_proved = False.\n\nIndependent second read-back (A2): Pass. DBN.H t z = ∫_{u>0} e^{tu²} Φ(u) cos(zu) du, where Φ(u) = Σ_{n≥1}(2π²n⁴e^{9u} − 3πn²e^{5u})exp(−πn²e^{4u}). This is the Polymath15 heat flow, with H_0(z) = ξ(1/2+iz/2)/8. The statement: for every real t ≥ 1/2 and every complex z, H_t(z) = 0 implies Im z = 0. That is exactly de Bruijn 1950 (Λ ≤ 1/2), with no hypotheses. It is not RH-strength, since RH is Λ ≤ 0. The RHDefs definitions are character-identical to DBNDefs.\n\nGate: the canonical statement_matches check returned True. artifact_incompleteness_markers returned [] on all 12 closure modules. A grep found no axiom, opaque, extern, implemented_by, unsafe, native_decide, or `sorry`/admit. `lake build --no-build` reports all targets up to date (8759 jobs). My own probe type-checked the verbatim registry type. #print axioms on dbn_debruijn_real_zeros, approxHadamard and H0ZeroFreeOffStrip_holds gives only [propext, Classical.choice, Quot.sound].\n\nSemantics: the final theorem is by_contra on H_ne_zero_of_half_le. That applies the conditional H_ne_zero_of_obligations to two proved theorems: H0ZeroFreeOffStrip_holds (the trivial strip (Im z)² ≤ 1, from H0_zero_strip) and approxHadamard. approxHadamard is proved from evenHadamardData_of_order_lt_two, using entire, even, not identically zero, and order 3/2 < 2. EvenHadamardData is a real product-limit structure. No Hadamard, RH or Λ ≤ 0 hypothesis appears anywhere in the closure.\n\nNumerics (mpmath at 40 digits, checked against quad and ξ to about 1e-35): the real zeros of H_0 in [0,62] equal 2γ_1..2γ_4 to 7e-34. For t = 1/2, argument-principle winding is 0 on [0,60]×[0.1,1], on [0,60]×[−1,−0.1] and on [0,60]×[0.02,3]. Positive controls give 1 and 3 as expected. Establishes: Λ ≤ 1/2 for the island's H_t. Does not establish anything about zeros of H_0 inside the strip, Λ ≤ 0, or RH. conjecture1_proved = False.\n\nTestimony: docs/AUDIT_TESTIMONY_RH_dbn_debruijn_real_zeros_2026-09-23_A1.md, _A2.md (both pass, axioms_clean, statement_byte_identical)."

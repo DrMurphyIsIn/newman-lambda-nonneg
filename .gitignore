@@ -1,0 +1,6 @@
+work/
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/arxiv/
+.DS_Store

@@ -1,0 +1,10 @@
+source_repo=https://github.com/DrMurphyIsIn/Arda
+source_commit=ddf2ecff026a85cb99f4efe62d1b9f2c6d2855a7
+source_tag=newman-v1.0.0
+copied=2026-10-10
+telperion_examples_dbn_lean=the ten Newman modules (DBNBohr, DBNFtZero, DBNFtZeroHigh, DBNStirling, DBNGaussConv, DBNSaddleAlg, DBNSaddleBounds, DBNSaddleSum, DBNTheorem4, DBNNewman) + AxiomGuardDBN, lakefile.toml, lean-toolchain, lake-manifest.json; byte-identical
+telperion_missions_judge_dbn=RH_dbn_newman challenge, comparator config, MANIFEST, lakefile as judged in runs 38062595826 and 38070548082
+telperion_missions_rh=node records RH_dbn_newman, RH_dbn_debruijn_real_zeros, RH_dbn_real_zeros_nine_thirtyseconds; Statements RH_dbn_newman + RHDefs
+toolchain=leanprover/lean4:v4.34.0-rc1
+mathlib=de5ce8a9a66a4aa68a9bdbb35b63a06d34d9ca11
+licriterion=nicholasbulka/li-criterion-rh-equivalence-lean@35df682f3b709ffe5fbcfdd452dfa964bd622b87
