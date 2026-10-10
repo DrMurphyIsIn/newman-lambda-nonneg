@@ -18,9 +18,9 @@ Everything the arXiv form asks for, ready to paste. The source package is `paper
 - **Cross-list:** cs.LO (Logic in Computer Science)
 - **MSC classes:** 11M26 (primary); 03B35, 11M06, 33B15 (secondary)
 - **ACM classes:** F.4.1
-- **Comments:** PAGES pages. Lean 4 sources, verification records and Comparator transcripts at
-  https://github.com/DrMurphyIsIn/newman-lambda-nonneg (v1.0.0), archived at Zenodo, doi:ZENODO_VERSION_DOI
-  (concept doi:ZENODO_CONCEPT_DOI). The theorem is Rodgers-Tao's (2018) and the proof formalized is Dobner's
+- **Comments:** 14 pages. Lean 4 sources, verification records and Comparator transcripts at
+  https://github.com/DrMurphyIsIn/newman-lambda-nonneg (v1.0.0), archived at Zenodo, doi:10.5281/zenodo.23287833
+  (concept doi:10.5281/zenodo.23287832). The theorem is Rodgers-Tao's (2018) and the proof formalized is Dobner's
   (arXiv:2005.05142); the contribution is the formalization. Not a proof of the Riemann Hypothesis.
 - **License:** CC BY 4.0 (matches `paper/`'s licence in `LICENSING.md`).
 - **Report number / journal ref / DOI fields:** leave blank (the Zenodo DOI is the dataset, not the paper).

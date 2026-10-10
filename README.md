@@ -1,6 +1,6 @@
 # Λ ≥ 0, kernel-checked
 
-[![DOI](https://zenodo.org/badge/DOI/ZENODO_CONCEPT_DOI.svg)](https://doi.org/ZENODO_CONCEPT_DOI)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23287832.svg)](https://doi.org/10.5281/zenodo.23287832)
 
 The de Bruijn–Newman constant Λ is a single real number that encodes the Riemann Hypothesis.
 Take the Riemann ξ function, write it as a Fourier transform, and let that transform evolve
@@ -128,8 +128,8 @@ kernel has yet.
 ## The paper
 
 `paper/paper.pdf`, CC-BY-4.0; archived with this repository at Zenodo, DOI
-[ZENODO_VERSION_DOI](https://doi.org/ZENODO_VERSION_DOI) for v1.0.0 and
-[ZENODO_CONCEPT_DOI](https://doi.org/ZENODO_CONCEPT_DOI) for all versions. It states the theorem
+[10.5281/zenodo.23287833](https://doi.org/10.5281/zenodo.23287833) for v1.0.0 and
+[10.5281/zenodo.23287832](https://doi.org/10.5281/zenodo.23287832) for all versions. It states the theorem
 as formalized, walks Dobner's six steps and the three departures, gives the module map with the
 headline statements in Lean, lays out the verification chain, and says plainly what is and is not
 established.

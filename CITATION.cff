@@ -8,13 +8,13 @@ repository-code: "https://github.com/DrMurphyIsIn/newman-lambda-nonneg"
 license: Apache-2.0
 version: v1.0.0
 date-released: 2026-10-10
-doi: ZENODO_VERSION_DOI
+doi: 10.5281/zenodo.23287833
 identifiers:
   - type: doi
-    value: ZENODO_VERSION_DOI
+    value: 10.5281/zenodo.23287833
     description: "Zenodo archive of release v1.0.0"
   - type: doi
-    value: ZENODO_CONCEPT_DOI
+    value: 10.5281/zenodo.23287832
     description: "Zenodo concept DOI (all versions; resolves to the latest)"
 keywords:
   - de Bruijn-Newman constant
