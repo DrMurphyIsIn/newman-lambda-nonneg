@@ -25,6 +25,8 @@ jobs:
           grep -q "'dbn_newman' depends on axioms: \[propext, Classical.choice, Quot.sound\]" axioms.txt
           grep -q "'selberg_newman' depends on axioms: \[propext, Classical.choice, Quot.sound\]" axioms.txt
           grep -q "'selberg_newman_sharp' depends on axioms: \[propext, Classical.choice, Quot.sound\]" axioms.txt
+          printf 'import DBNSelbergSharpZeta\n#print axioms dbn_newman_of_sharp\n' > ZetaSharpCheck.lean
+          lake env lean ZetaSharpCheck.lean | tee -a axioms.txt
           grep -q "'dbn_newman_of_sharp' depends on axioms: \[propext, Classical.choice, Quot.sound\]" axioms.txt
       - name: Build the registry judge challenge (statement identity)
         working-directory: work/arda/telperion/missions/judge/dbn

@@ -165,7 +165,7 @@ kernel has yet.
 ## The paper
 
 `paper/paper.pdf`, CC-BY-4.0 (15 pages in v1.1.0); archived with this repository at Zenodo, DOI
-[10.5281/zenodo.23287833](https://doi.org/10.5281/zenodo.23287833) for v1.0.0 (v1.1.0 to follow) and
+[10.5281/zenodo.23292885](https://doi.org/10.5281/zenodo.23292885) for v1.1.0, [10.5281/zenodo.23287833](https://doi.org/10.5281/zenodo.23287833) for v1.0.0, and
 [10.5281/zenodo.23287832](https://doi.org/10.5281/zenodo.23287832) for all versions. It states the theorem
 as formalized, walks Dobner's six steps and the three departures, gives the module map with the
 headline statements in Lean, lays out the verification chain, and says plainly what is and is not

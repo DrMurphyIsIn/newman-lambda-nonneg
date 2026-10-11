@@ -8,11 +8,14 @@ repository-code: "https://github.com/DrMurphyIsIn/newman-lambda-nonneg"
 license: Apache-2.0
 version: v1.1.0
 date-released: 2026-10-11
-doi: 10.5281/zenodo.23287833
+doi: 10.5281/zenodo.23292885
 identifiers:
   - type: doi
+    value: 10.5281/zenodo.23292885
+    description: "Zenodo archive of release v1.1.0"
+  - type: doi
     value: 10.5281/zenodo.23287833
-    description: "Zenodo archive of release v1.0.0 (v1.1.0 archive to follow; the concept DOI resolves to the latest)"
+    description: "Zenodo archive of release v1.0.0"
   - type: doi
     value: 10.5281/zenodo.23287832
     description: "Zenodo concept DOI (all versions; resolves to the latest)"
