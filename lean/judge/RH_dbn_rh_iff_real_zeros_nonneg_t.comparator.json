@@ -1,0 +1,13 @@
+{
+  "challenge_module": "MissionChallenges.RH_dbn_rh_iff_real_zeros_nonneg_t",
+  "solution_module": "MissionChallenges.RH_dbn_rh_iff_real_zeros_nonneg_t",
+  "theorem_names": [
+    "MissionJudge.RH_dbn_rh_iff_real_zeros_nonneg_t"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "enable_nanoda": true
+}

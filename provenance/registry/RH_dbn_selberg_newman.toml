@@ -1,0 +1,48 @@
+created = "2026-10-10"
+depends_on = []
+kind = "milestone"
+name = "RH.dbn_selberg_newman"
+statement_module = "Statements.RH_dbn_selberg_newman"
+status = "proved"
+title = "Newman's conjecture for the extended Selberg class (Dobner 2020, Theorem 1 in the form the dbn island states it): for every ExtSelbergData F (coefficients absolutely convergent on Re s > 1, a(1) = 1, not a single term; Gamma factor P(v) Q^v prod Gamma(lam_j v + mu_j) with lam_j > 0, Re mu_j >= 0, sum lam_j > 0; entire completed function Xi equal to sum a(n) gamma_F(s) n^-s on Re s > 1 and bounded on horizontal strips) and every t < 0, the Gaussian-convolution heat flow F.flow t has a NON-REAL zero, i.e. Lambda_F >= 0. The structure's fields are the hypotheses; for an honest S^# element the entire-continuation and strip-bound fields are theorems (Phragmen-Lindelof + Stirling) NOT proved here. zeta is an instance (DBNSelbergZeta) and recovers RH_dbn_newman as the control. Lambda_F = 0 (generalized RH) is NOT touched. conjecture1_proved = False"
+updated = "2026-10-10"
+
+[author]
+date = "2026-10-10"
+identity = "dr.murphy.is.in@arda-dao.com"
+session = "session_01T6sQ9By6CuBoffW7BYPHJT"
+
+[comparator]
+artifact_sha256 = "334aab74c1de4e0c349ba43d0729bd52f0afab5206b2dcb4e205572d2d27efe9"
+date = "2026-10-10"
+head_check = "matched"
+job_id = "114334641124"
+job_url = "https://github.com/DrMurphyIsIn/Arda/actions/runs/38093443787/job/114334641124"
+judged_head_sha = "eb5fbfa5d63770d21cf03c45693d1949a09dbed1"
+kernel_mode = "nanoda"
+log_check = "verified-offline"
+run_id = "38093443787"
+run_url = "https://github.com/DrMurphyIsIn/Arda/actions/runs/38093443787"
+theorem = "selberg_newman"
+
+[grant]
+artifact_sha256 = "334aab74c1de4e0c349ba43d0729bd52f0afab5206b2dcb4e205572d2d27efe9"
+date = "2026-10-10"
+gate_version = "2026-09-23.1"
+identity = "dr.murphy.is.in@arda-dao.com"
+session = "session_01T6sQ9By6CuBoffW7BYPHJT"
+statement_sha256 = "ddc2f3ee96cd3e28c6d97efc2a5fa1871413a27259e7dd3a296b814e17f8904f"
+
+[proof]
+artifact = "../../examples/dbn/lean/DBNSelbergNewman.lean"
+artifact_kind = "lean_module"
+closure_clean = true
+via = "direct"
+
+[readback]
+auditor = "petermurphy@mountainviewdirectcare.com"
+auditor_identity = "petermurphy@mountainviewdirectcare.com"
+auditor_session = "operator-2026-10-10b"
+date = "2026-10-10"
+independence = "independent"
+text = "Read back by the operator from Statements/RH_dbn_selberg_newman.lean and RHDefs.lean (rendering drafted by the authoring session, checked by me). The theorem quantifies over every F of the structure DBNSelberg.ExtSelbergData, i.e. Dirichlet coefficients a with a 1 = 1, a second nonzero coefficient, and absolute convergence for Re s > 1; Gamma data Q > 0, lam_j > 0, Re mu_j >= 0 with sum lam_j > 0; a nonzero polynomial P; and a function Xi that is entire, equals the sum of a n times P(s) Q^s prod Gamma(lam_j s + mu_j) times n^-s for Re s > 1 in the variable z = -i(2s-1), and is bounded on every horizontal strip. For every such F and every real t < 0 it concludes that there is a complex z with F.flow t z = 0 and z.im not equal to 0, where flow t is the Gaussian convolution (4 pi |t|)^(-1/2) times the integral of exp(-w^2/(4|t|)) Xi(z + w). That is Newman's conjecture Lambda_F >= 0 for the abstract data; the entire-continuation and strip-bound fields are hypotheses here, not derived."

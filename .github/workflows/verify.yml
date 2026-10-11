@@ -21,8 +21,11 @@ jobs:
         run: |
           lake exe cache get || true
           lake build
-          lake env lean AxiomGuardDBN.lean | grep -E "dbn_newman|dbn_newman_of_neg" | tee axioms.txt
+          lake env lean AxiomGuardDBN.lean | grep -E "dbn_newman|selberg_newman" | tee axioms.txt
           grep -q "'dbn_newman' depends on axioms: \[propext, Classical.choice, Quot.sound\]" axioms.txt
+          grep -q "'selberg_newman' depends on axioms: \[propext, Classical.choice, Quot.sound\]" axioms.txt
+          grep -q "'selberg_newman_sharp' depends on axioms: \[propext, Classical.choice, Quot.sound\]" axioms.txt
+          grep -q "'dbn_newman_of_sharp' depends on axioms: \[propext, Classical.choice, Quot.sound\]" axioms.txt
       - name: Build the registry judge challenge (statement identity)
         working-directory: work/arda/telperion/missions/judge/dbn
-        run: lake build MissionChallenges.RH_dbn_newman
+        run: lake build MissionChallenges.RH_dbn_newman MissionChallenges.RH_dbn_selberg_newman MissionChallenges.RH_dbn_selberg_newman_sharp

@@ -6,13 +6,13 @@ authors:
     given-names: Peter W.
 repository-code: "https://github.com/DrMurphyIsIn/newman-lambda-nonneg"
 license: Apache-2.0
-version: v1.0.0
-date-released: 2026-10-10
+version: v1.1.0
+date-released: 2026-10-11
 doi: 10.5281/zenodo.23287833
 identifiers:
   - type: doi
     value: 10.5281/zenodo.23287833
-    description: "Zenodo archive of release v1.0.0"
+    description: "Zenodo archive of release v1.0.0 (v1.1.0 archive to follow; the concept DOI resolves to the latest)"
   - type: doi
     value: 10.5281/zenodo.23287832
     description: "Zenodo concept DOI (all versions; resolves to the latest)"
@@ -33,5 +33,7 @@ abstract: >-
   Comparator against a challenge whose type is the registered statement. New kernel-checked infrastructure:
   complex Stirling with explicit remainder, the digamma asymptotic, Bohr almost periodicity for everywhere
   convergent Dirichlet series, the Gaussian-convolution representation of H_t, and a saddle-point analysis.
-  Together with the registry's Lambda <= 9/32 the kernel-checked range is 0 <= Lambda <= 9/32; Lambda = 0 is
+  Version 1.1 adds Dobner's theorem in full: Newman for every element of the extended Selberg class, with
+  the class stated as a Lean structure and zeta as the control instance. Together with the registry's
+  Lambda <= 9/32 the kernel-checked range is 0 <= Lambda <= 9/32; Lambda = 0 is
   the Riemann Hypothesis and is not proved.

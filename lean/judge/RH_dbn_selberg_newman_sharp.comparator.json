@@ -1,0 +1,13 @@
+{
+  "challenge_module": "MissionChallenges.RH_dbn_selberg_newman_sharp",
+  "solution_module": "MissionChallenges.RH_dbn_selberg_newman_sharp",
+  "theorem_names": [
+    "MissionJudge.RH_dbn_selberg_newman_sharp"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "enable_nanoda": true
+}

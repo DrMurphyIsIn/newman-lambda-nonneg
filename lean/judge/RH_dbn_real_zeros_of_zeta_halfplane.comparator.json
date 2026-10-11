@@ -1,0 +1,13 @@
+{
+  "challenge_module": "MissionChallenges.RH_dbn_real_zeros_of_zeta_halfplane",
+  "solution_module": "MissionChallenges.RH_dbn_real_zeros_of_zeta_halfplane",
+  "theorem_names": [
+    "MissionJudge.RH_dbn_real_zeros_of_zeta_halfplane"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "enable_nanoda": true
+}

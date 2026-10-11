@@ -1,0 +1,13 @@
+{
+  "challenge_module": "MissionChallenges.RH_dbn_debruijn_real_zeros",
+  "solution_module": "MissionChallenges.RH_dbn_debruijn_real_zeros",
+  "theorem_names": [
+    "MissionJudge.RH_dbn_debruijn_real_zeros"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "enable_nanoda": true
+}

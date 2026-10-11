@@ -75,6 +75,19 @@ import DBNSaddleBounds
 import DBNSaddleSum
 import DBNTheorem4
 import DBNNewman
+import DBNTheorem4Effective
+import DBNSelbergData
+import DBNSelbergGauss
+import DBNSelbergSaddleAlg
+import DBNSelbergSaddleBounds
+import DBNSelbergFtZero
+import DBNSelbergSaddleSum
+import DBNSelbergNewman
+import DBNSelbergZeta
+import DBNGammaVertical
+import DBNSelbergSharp
+import DBNSelbergSharpXi
+import DBNSelbergSharpStrip
 
 -- theta moments
 #print axioms DBN.summable_thetaTerm
@@ -977,3 +990,39 @@ example : M6gap.HeightFloor.DI.checkAB
 -- conjecture1_proved = False.
 #print axioms DBNSaddle.dbn_newman_of_neg
 #print axioms dbn_newman
+
+-- Effective Theorem 4 (item 4): explicit Y(c, x0, eps); tsums kept as constants in theorem4_explicit,
+-- fully closed-form in theorem4_fully_explicit. Not an effective Newman theorem (see the note).
+#print axioms DBNSaddle.theorem4_explicit
+#print axioms DBNSaddle.theorem4_fully_explicit
+#print axioms DBNSaddle.C₁_eq
+#print axioms DBNSaddle.C₂_eq
+
+-- Extended Selberg class (item 3, Dobner's theorem in full for every ExtSelbergData): the data of an
+-- S^# element as a structure (fields = hypotheses, incl. the entire continuation and strip bound),
+-- the Gaussian-convolution flow, and Newman for it; zeta is the control instance. Lambda_F = 0 is not touched.
+#print axioms DBNSelberg.ExtSelbergData.gammaF_add_eq
+#print axioms DBNSelberg.ExtSelbergData.xi_eq_tsum_Bn
+#print axioms DBNSelberg.ExtSelbergData.tsum_Bn_J_eq
+#print axioms DBNSelberg.ExtSelbergData.norm_KF_sub_one_le_unified
+#print axioms DBNSelberg.ExtSelbergData.P_eval_ne_zero
+#print axioms DBNSelberg.ExtSelbergData.exists_zero_Ft
+#print axioms DBNSelberg.ExtSelbergData.exists_zero_im_ge_Ft
+#print axioms DBNSelberg.ExtSelbergData.error_sum_small
+#print axioms DBNSelberg.ExtSelbergData.differentiable_flow
+#print axioms DBNSelberg.ExtSelbergData.theorem4_of
+#print axioms DBNSelberg.ExtSelbergData.selberg_newman_of
+#print axioms DBNSelberg.zetaData_flow_eq
+#print axioms selberg_newman
+#print axioms dbn_newman_of_selberg
+
+-- S^# itself (SelbergSharp: meromorphic F, functional equation on the strip, finite order on the right
+-- half-plane) yields an ExtSelbergData: Gamma decay on vertical strips, the glued entire xi, the
+-- Phragmen-Lindelof strip bound; hence Newman for every S^# element as the island states it.
+#print axioms DBNStirling.norm_Gamma_le_vertical
+#print axioms DBNSelberg.SelbergSharp.differentiable_xi
+#print axioms DBNSelberg.SelbergSharp.xi_functional_equation
+#print axioms DBNSelberg.SelbergSharp.hasFiniteOrder_xi
+#print axioms DBNSelberg.SelbergSharp.exists_bound_xi_vertical
+#print axioms selberg_newman_sharp_ext
+#print axioms selberg_newman_sharp

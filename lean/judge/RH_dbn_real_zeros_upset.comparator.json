@@ -1,0 +1,13 @@
+{
+  "challenge_module": "MissionChallenges.RH_dbn_real_zeros_upset",
+  "solution_module": "MissionChallenges.RH_dbn_real_zeros_upset",
+  "theorem_names": [
+    "MissionJudge.RH_dbn_real_zeros_upset"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "enable_nanoda": true
+}

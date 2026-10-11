@@ -5,7 +5,7 @@ name = "DBN"
 # xi vocabulary across the two islands. AxiomGuardDBN is a defaultTarget so bare `lake build`
 # compiles the guard and, transitively, every module it imports (cf. the li_positivity lakefile
 # rationale, #448/#451).
-defaultTargets = ["DBNDefs", "DBNRealZerosIff", "DBNXiRiemann", "DBNGKernel", "DBNXiCos", "DBNXiIBP", "DBNXi", "DBNRealZerosIffFinal", "DBNStrip", "DBNStep", "DBNStepControls", "DBNHurwitz", "DBNHeatApprox", "DBNDeBruijnReduction", "DBNHadamardCount", "DBNHadamardProduct", "DBNHadamardMean", "DBNHadamardLinear", "DBNHadamard", "DBNHadamardApprox", "DBNM1Approx", "DBNM1Parametric", "DBNM1RHIff", "DBNM1Controls", "DBNM4P15Defs", "DBNM4LocalStep", "DBNM4HeatUniform", "DBNM4P15Criterion", "M6gapEMZeta", "M6gapEMZetaComplex", "M6gapEMZetaTail", "M6gapZetaEMSum", "M6gapHeightFloorCheck", "M6gapHeightFloorTrig", "M6gapHeightFloorEM", "M6gapHeightFloorBoxes", "M6gapZetaZeroConfinement", "M6gapDlvpZetaSymmetry", "M6gapHeightFloor", "M6gapImAxis", "M6gapP15ZeroFree", "DBNM5Alpha", "DBNM5Target", "DBNP15Wired", "DBNZeroFreeHalfplane", "DBNBohr", "DBNFtZero", "DBNFtZeroHigh", "DBNStirling", "DBNGaussConv", "DBNSaddleAlg", "DBNSaddleBounds", "DBNSaddleSum", "DBNTheorem4", "DBNNewman", "AxiomGuardDBN"]
+defaultTargets = ["DBNDefs", "DBNRealZerosIff", "DBNXiRiemann", "DBNGKernel", "DBNXiCos", "DBNXiIBP", "DBNXi", "DBNRealZerosIffFinal", "DBNStrip", "DBNStep", "DBNStepControls", "DBNHurwitz", "DBNHeatApprox", "DBNDeBruijnReduction", "DBNHadamardCount", "DBNHadamardProduct", "DBNHadamardMean", "DBNHadamardLinear", "DBNHadamard", "DBNHadamardApprox", "DBNM1Approx", "DBNM1Parametric", "DBNM1RHIff", "DBNM1Controls", "DBNM4P15Defs", "DBNM4LocalStep", "DBNM4HeatUniform", "DBNM4P15Criterion", "M6gapEMZeta", "M6gapEMZetaComplex", "M6gapEMZetaTail", "M6gapZetaEMSum", "M6gapHeightFloorCheck", "M6gapHeightFloorTrig", "M6gapHeightFloorEM", "M6gapHeightFloorBoxes", "M6gapZetaZeroConfinement", "M6gapDlvpZetaSymmetry", "M6gapHeightFloor", "M6gapImAxis", "M6gapP15ZeroFree", "DBNM5Alpha", "DBNM5Target", "DBNP15Wired", "DBNZeroFreeHalfplane", "DBNBohr", "DBNFtZero", "DBNFtZeroHigh", "DBNStirling", "DBNGaussConv", "DBNSaddleAlg", "DBNSaddleBounds", "DBNSaddleSum", "DBNTheorem4", "DBNNewman", "DBNTheorem4Effective", "DBNSelbergData", "DBNSelbergGauss", "DBNSelbergSaddleAlg", "DBNSelbergSaddleBounds", "DBNSelbergFtZero", "DBNSelbergSaddleSum", "DBNSelbergNewman", "DBNSelbergZeta", "DBNGammaVertical", "DBNSelbergSharp", "DBNSelbergSharpXi", "DBNSelbergSharpStrip", "DBNSelbergSharpZeta", "AxiomGuardDBN"]
 
 [[require]]
 name = "LiCriterion"
@@ -358,3 +358,56 @@ name = "DBNNewman"
 # It is still run separately via `lake env lean AxiomGuardDBN.lean` for the #print axioms check.
 [[lean_lib]]
 name = "AxiomGuardDBN"
+
+# Extended Selberg class (Dobner's theorem in full): programme item 3 of RH_PROGRAM_2026-10-10.md.
+# ExtSelbergData carries the data Dobner's argument consumes; selberg_newman is Newman for every
+# such F; DBNSelbergZeta instantiates it with zeta and recovers dbn_newman as the control.
+# conjecture1_proved = False.
+
+[[lean_lib]]
+name = "DBNSelbergData"
+
+[[lean_lib]]
+name = "DBNSelbergGauss"
+
+[[lean_lib]]
+name = "DBNSelbergSaddleAlg"
+
+[[lean_lib]]
+name = "DBNSelbergSaddleBounds"
+
+[[lean_lib]]
+name = "DBNSelbergFtZero"
+
+[[lean_lib]]
+name = "DBNSelbergSaddleSum"
+
+[[lean_lib]]
+name = "DBNSelbergNewman"
+
+[[lean_lib]]
+name = "DBNSelbergZeta"
+
+# Effective Theorem 4 (programme item 4, bounded exploration): explicit Y(c, x0, eps) for theorem4
+# with every constant closed-form; see telperion/docs/EFFECTIVE_THEOREM4_2026-10-10.md.
+[[lean_lib]]
+name = "DBNTheorem4Effective"
+
+# S^# as a structure (SelbergSharp: meromorphic F, functional equation on the strip, finite order on
+# the right half-plane) and the derivation of ExtSelbergData from it: Gamma vertical decay, the glued
+# entire xi_F of finite order, the Phragmen-Lindelof strip bound. conjecture1_proved = False.
+
+[[lean_lib]]
+name = "DBNGammaVertical"
+
+[[lean_lib]]
+name = "DBNSelbergSharp"
+
+[[lean_lib]]
+name = "DBNSelbergSharpXi"
+
+[[lean_lib]]
+name = "DBNSelbergSharpStrip"
+
+[[lean_lib]]
+name = "DBNSelbergSharpZeta"

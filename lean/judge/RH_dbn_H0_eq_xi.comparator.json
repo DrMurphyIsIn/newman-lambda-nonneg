@@ -1,0 +1,13 @@
+{
+  "challenge_module": "MissionChallenges.RH_dbn_H0_eq_xi",
+  "solution_module": "MissionChallenges.RH_dbn_H0_eq_xi",
+  "theorem_names": [
+    "MissionJudge.RH_dbn_H0_eq_xi"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "enable_nanoda": true
+}

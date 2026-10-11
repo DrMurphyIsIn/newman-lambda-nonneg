@@ -78,6 +78,42 @@ the digamma asymptotic ψ(z) = Log z − 1/(2z) + O(‖z‖^{−2}), Bohr almost
 everywhere-convergent Dirichlet series, ‖Γ(v)‖ ≤ Γ(Re v), and ‖e^Q − 1‖ ≤ ‖Q‖e^{‖Q‖} without a
 size restriction (`DBNStirling` and friends). Those are written to be upstreamed.
 
+## Version 1.1: Dobner's theorem in full
+
+Dobner proved Newman's conjecture for the whole extended Selberg class, and every step above except
+the Dirichlet-series layer was already general. Version 1.1.0 carries that generalization, in two
+layers, both kernel-checked under the same three axioms and both judged by the registry's Comparator
+job (runs 38093443787 and 38108898132, second kernel nanoda; transcripts in `logs/`).
+
+The first layer isolates what the proof consumes. `DBNSelberg.ExtSelbergData` is a structure holding
+Dirichlet coefficients absolutely convergent on Re s > 1 with a(1) = 1 and a second nonzero term, the
+Gamma data P(v) Q^v ∏ Γ(λ_j v + μ_j) with λ_j > 0, Re μ_j ≥ 0 and positive degree, and a completed
+function Ξ that is entire, equals the Gamma-weighted Dirichlet series on Re s > 1, and is bounded on
+horizontal strips. The heat flow for t < 0 is the Gaussian convolution the island already proved H_t to be.
+
+> **`selberg_newman`: for every `F : ExtSelbergData` and every t < 0, `F.flow t` has a non-real zero.**
+
+The second layer states the class itself. `DBNSelberg.SelbergSharp` has a meromorphic continuation
+F with (s−1)^m F extending to an entire function, the Gamma data, a root number, the functional
+equation Φ(s) = ω·conj Φ(1 − conj s) on the critical strip, and finite order of (s(s−1))^m Φ on the
+right half-plane. Its completed function is glued from the right-half-plane expression and its
+reflection, proved entire (the two agree on the strip by the functional equation), of finite order,
+and bounded on every vertical strip: Gamma decays like e^{−(π/2)(Σλ_j)|τ|} on vertical lines, which
+the island's Stirling formula now delivers, and Phragmén–Lindelöf fills in the strip between
+Re s = −1 and Re s = 2.
+
+> **`selberg_newman_sharp`: for every `S : SelbergSharp` and every t < 0, the heat flow of ξ_S has a non-real zero.**
+
+ζ is an honest instance of the class (`zetaSharp`, pole order 1, the conjugation symmetry of Λ from
+Riemann's symmetric integral, finite order from LiCriterion's ξ bound), its heat flow is exactly
+16·H_t, and `dbn_newman_of_sharp` recovers the ζ theorem from the class theorem. Two things the
+formalization corrected in the textbook statement are recorded in the paper and the design note:
+the pole axiom has to be an extension because Mathlib's ζ carries a junk value at s = 1, and the
+identification ξ_ζ = 16·H₀ holds for the right-half-plane expression only on Re s > 0. The one
+remaining simplification is that finite order is assumed for (s(s−1))^m Φ rather than for (s−1)^m F
+alone. Dirichlet L-functions are not instantiated. Thirteen modules, about 4,950 lines; design and
+module map in `docs/SELBERG_NEWMAN_DESIGN_2026-10-10.md`.
+
 ## What was checked, and by what
 
 - **The kernel.** Every theorem is checked by Lean's kernel. The island's axiom guard re-elaborates
@@ -119,16 +155,17 @@ live in two Lean environments (this one at Mathlib `de5ce8a9`, the upper bound a
 `d13f23b`); porting this development to OpenAI's pin, as was done for de Bruijn's theorem, would
 put the whole range in one environment.
 
-Two doors it opens, with no promise attached. Dobner's theorem is stated for the extended Selberg
-class, and everything here except the Dirichlet-series layer is already general. And the remainder
+Two doors it opens, with no promise attached. Dobner's theorem for the whole class is now in the kernel
+(version 1.1), so any future zero-free strip for any element of the class converts into a certified
+statement about its heat flow in a day. And the remainder
 bounds in `DBNSaddleSum` are explicit, so Theorem 4 can be made quantitative: how far off the axis
 the zeros of H_t sit as t → 0⁻ is a question the dynamics of Rodgers and Tao speak to and no
 kernel has yet.
 
 ## The paper
 
-`paper/paper.pdf`, CC-BY-4.0; archived with this repository at Zenodo, DOI
-[10.5281/zenodo.23287833](https://doi.org/10.5281/zenodo.23287833) for v1.0.0 and
+`paper/paper.pdf`, CC-BY-4.0 (15 pages in v1.1.0); archived with this repository at Zenodo, DOI
+[10.5281/zenodo.23287833](https://doi.org/10.5281/zenodo.23287833) for v1.0.0 (v1.1.0 to follow) and
 [10.5281/zenodo.23287832](https://doi.org/10.5281/zenodo.23287832) for all versions. It states the theorem
 as formalized, walks Dobner's six steps and the three departures, gives the module map with the
 headline statements in Lean, lays out the verification chain, and says plainly what is and is not
@@ -145,8 +182,8 @@ You need Lean 4 (elan), about 20 GB of disk, and a few CPU-hours the first time.
 scripts/materialize.sh                       # Arda at tag newman-v1.0.0, vendored copies checked
 cd work/arda/telperion/examples/dbn/lean
 lake exe cache get && lake build             # 56 modules, 8,829 jobs cold
-lake env lean AxiomGuardDBN.lean | grep dbn_newman
-cd ../../../missions/judge/dbn && lake build MissionChallenges.RH_dbn_newman
+lake env lean AxiomGuardDBN.lean | grep -E 'dbn_newman|selberg_newman'
+cd ../../../missions/judge/dbn && lake build MissionChallenges.RH_dbn_newman MissionChallenges.RH_dbn_selberg_newman MissionChallenges.RH_dbn_selberg_newman_sharp
 ```
 
 For the second kernel, build [leanprover/comparator](https://github.com/leanprover/comparator) at
@@ -158,12 +195,14 @@ tag v4.34.0 with its `lean-toolchain` set to v4.34.0-rc1, build
 ## Layout
 
 ```
-lean/dbn/           the ten Newman modules + AxiomGuardDBN, lakefile, toolchain, manifest (byte-identical to Arda)
-lean/judge/         the registry judge bundle: the challenge whose TYPE is the registered statement, Comparator config
-lean/statements/    the registered statement package (RH_dbn_newman, RHDefs)
-provenance/         registry node records (Newman, de Bruijn, 9/32), the Arda source tag, the CI workflow
-logs/               the two Comparator CI transcripts (pull-request head and main)
-docs/               the scoping document and the programme note
+lean/dbn/           the ten Newman modules, the thirteen Selberg-class modules, DBNTheorem4Effective, AxiomGuardDBN,
+                    lakefile, toolchain, manifest (byte-identical to Arda at tag newman-v1.1.0)
+lean/judge/         the registry judge bundle for the dbn island: challenges whose TYPE is the registered statement
+lean/statements/    the registered statement package (RH_dbn_newman, RH_dbn_selberg_newman, RH_dbn_selberg_newman_sharp, RHDefs)
+provenance/         registry node records (Newman, both Selberg nodes, de Bruijn, 9/32), the Arda source tag, the CI workflow
+logs/               the four Comparator CI transcripts (v1.0.0 and v1.1.0, pull-request head and main)
+docs/               the scoping document, the programme note, the Selberg design note, the effective Theorem 4 note,
+                    the Mathlib upstreaming report
 scripts/            materialize.sh
 paper/              the paper, the arXiv sheet, make_arxiv.sh
 ```

@@ -124,6 +124,30 @@
       "nanoda": true,
       "artifact_sha256": "f3154843d4185264ccbc0dc6fab73de687e2be517454031b7eecd11cd59b8454",
       "statement_sha256": "f4ac36e5dc3b11aff23c3b8be7aab03e39f5a3a045b252592d46a10aa759be6f"
+    },
+    {
+      "slug": "RH_dbn_selberg_newman",
+      "campaign": "rh",
+      "theorem": "selberg_newman",
+      "solution_module": "DBNSelbergNewman",
+      "challenge_module": "MissionChallenges.RH_dbn_selberg_newman",
+      "bridge_theorem": "MissionJudge.RH_dbn_selberg_newman",
+      "config": "RH_dbn_selberg_newman.comparator.json",
+      "nanoda": true,
+      "artifact_sha256": "334aab74c1de4e0c349ba43d0729bd52f0afab5206b2dcb4e205572d2d27efe9",
+      "statement_sha256": "ddc2f3ee96cd3e28c6d97efc2a5fa1871413a27259e7dd3a296b814e17f8904f"
+    },
+    {
+      "slug": "RH_dbn_selberg_newman_sharp",
+      "campaign": "rh",
+      "theorem": "selberg_newman_sharp",
+      "solution_module": "DBNSelbergSharpStrip",
+      "challenge_module": "MissionChallenges.RH_dbn_selberg_newman_sharp",
+      "bridge_theorem": "MissionJudge.RH_dbn_selberg_newman_sharp",
+      "config": "RH_dbn_selberg_newman_sharp.comparator.json",
+      "nanoda": true,
+      "artifact_sha256": "d439ab6ed356348b7354348e1a699753745b6e74ed25c4c3775d115b066db7f4",
+      "statement_sha256": "052b1b59100be79bd834fc7d871a24adc69ff301899aae8fc0f55e06e22a55c5"
     }
   ]
 }
